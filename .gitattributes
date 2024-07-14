@@ -1,0 +1,9 @@
+README.md merge=ours
+.gitignore merge=ours
+requirements.txt merge=ours
+Procfile merge=ours
+settings.yaml merge=ours
+app.json merge=ours
+Dockerfile merge=ours
+LICENSE merge=ours
+

@@ -1,0 +1,48 @@
+force_sub: false
+web: true
+
+LOG_CHANNEL: -1002233681213
+
+user_check:
+  force_sub: false
+  accept_tc: true
+  ban: true
+
+groups:
+  admin: [1775541139, 1520625615, 1809735866]
+  tester: [ 2023698054 ]
+
+subscriptions:
+  - name: "free"
+    data:
+      limits:
+        max_mails: 3  
+  - name: "premium"
+    data:
+      prices: 
+        - price: "100,xtr"
+          validity: "1,month"
+        - price: "200,xtr"
+          validity: "3,month"
+
+      limits:
+        max_mails: 10
+        custom_domains: true
+        send: true
+
+broadcast:
+  users: all    #no. of users to send the message to
+  mode: forward #available options: forward, copy
+
+
+MongoDB:
+  database: mailable
+
+links:
+  channel_url: "t.me/theostrich"
+  group_url  : "t.me/ostrichdiscussion"
+  donation_url: "https://paypal.me/donateostrich"
+  repo_url: "https://github.com/RabbitFored/mailable"
+
+extras:
+  # add your own extras here
