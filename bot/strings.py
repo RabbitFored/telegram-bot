@@ -6,6 +6,7 @@ donation_url =  CONFIG.settings["links"]["donation_url"]
 repo_url =  CONFIG.settings["links"]["repo_url"]
 
 START_TEXT = '''
+TEST
 **Hello {user} 👋 !
 \nI am a mail bot. You can use me to send or receive mails.
 \nHit help to know more on using me.**
