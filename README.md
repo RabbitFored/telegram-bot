@@ -1,5 +1,5 @@
 <h1 align="center"> 
-    ✨ Telegram BOT ✨ 
+    ✨ Mailable BOT ✨ 
 </h1>
 A flexible telegram base bot
 
