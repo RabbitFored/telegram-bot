@@ -1,0 +1,47 @@
+{
+  "name": "Telegram bot",
+  "description": "A modulare Telegram base bot",
+  "keywords": [
+    "telegram",
+    "python",
+    "bots",
+  ],
+  "website": "https://github.com/RabbitFored/telegram-bot",
+  "repository": "https://github.com/RabbitFored/telegram-bot",
+  "env": {
+    "ENV": {
+      "description": "Setting this to ANYTHING will enable env variables",
+      "value": "OSTRICH"
+    },
+    "apiID": {
+      "description": "Your telegram api id",
+      "value": ""
+    },
+    "apiHASH": {
+      "description": "Your telegram api hash",
+      "value": ""
+    },
+    "botTOKEN": {
+      "description": "Your bot token",
+      "value": ""
+    },
+     "PORT": {
+      "description": "Port to run webpage",
+      "value": "5000"
+    }, 
+    "mongoURI": {
+      "description": "MongoDB connection string",
+      "value": ""
+    },
+    "ownerID": {
+      "description": "Your telegram userID",
+      "value": ""
+    },
+  },
+  "formation": {
+    "web": {
+      "quantity": 1
+    }
+  },
+   "buildpacks": [ { "url": "heroku/python" } ]
+ }
