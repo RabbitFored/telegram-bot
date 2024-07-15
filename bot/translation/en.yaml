@@ -1,0 +1,76 @@
+################
+# Default lang #
+################
+
+name: English
+natively: English
+
+authors:
+   - Quantum
+
+#commons
+start_txt: |-
+   **Hello {user} 👋 !
+   I am a simple Telegram Bot.\n
+   Hit /help to know more on using me.**
+start_btn: |-
+   [HELP](data::cf_commons.get_help)
+
+help_txt: |-
+   **Here is an detailed guide on using me.**
+
+   **Available Commands:**
+   /start : Check if I am alive
+   /help : Send you this text!
+   /about : About me
+   /donate : Donate us
+help_btn: |-
+   [Get Help](url::{group_url})
+##extended help msg for bot administrators
+admin_help_txt: |-
+   **Administrator Commands:**
+   /broadcast : Broadcast a message to all users      
+   /stats : Check stats of your bot
+
+about_txt: |-
+   **About Me :**
+   \n  - **Name**      : Telegram-Bot
+   \n  - **Creator**   : @theostrich
+   \n  - **Language**  : Python 3
+   \n  - **Library**   : [Pyrogram](https://pyrogram.org/)
+   \nIf you enjoy using me and want to help me survive, do donate with the /donate command - my creator will be very grateful! Doesn't have to be much - every little helps! Thanks for reading :)
+abot_btn: |-
+   [➰Channel](url::{channel_url}) [👥Support Group](url::{group_url})
+   
+donate_txt: |-
+   Thank you for your wish to contribute. I hope you enjoyed using our services. Make a small donation/contribute to let this project alive.
+donate_btn: "[➰Contribute](url::{repo_url}) [👥Paypal Us](url::{donation_url})"
+
+privacy_policy: |-
+   **Privacy Policy:**
+
+   We are committed to protecting and respecting your privacy.
+   It is our overriding policy to collect as little user information as possible when using the Service.
+
+   This Privacy Policy explains (i) what information we collect through your access and use of our Service, (ii) the use we make of such information
+
+   By using this Service, you agree to the terms outlined in this Privacy Policy.
+
+   **Data we collect and why we collect it:**
+
+   - **Account creation:**
+        Data like your telegram username, user id, date of creation are collected at the time of account creation (starting the bot).
+   This information is necessary to provide the service and support.
+
+   - **Mail content:**
+       All mail contents are stored temporarily to provide web view access to the users.
+
+   **Note:** _These mails will never be accessed by us (or) some others unless you share the access link. It is your sole responsibility to protect the access links shared by bot._
+
+   **Changes to our Privacy Policy**
+
+   We reserve the right to periodically review and change this Policy and will notify users who have enabled the notification preference about any change. Continued use of the Service will be deemed as acceptance of such changes.
+
+   **We may stop this service at any time without prior notice.**
+
+force_sub_txt: "Subscribe to {channel} to use this bot"

@@ -1,5 +1,7 @@
 from pyrogram import Client, filters
 from bot.core import database as db
+from bot.core.translation import Translator
+from bot.core.utils import generate_keyboard
 
 
 '''
@@ -48,12 +50,16 @@ async def test(client, message):
 
 @Client.on_message(filters.command(["test"]))
 async def test(client, message):
-    user = db.get_user(message.from_user.id)
-    response = f"{user.__dict__}"
-    await message.reply(response)
-
+    user_language = "en"
+    strings = Translator(lang=user_language)
+    greeting_message = strings.get("start_msg", user=message.from_user.first_name)
+    btn = strings.get("start_btn")
+    await message.reply(greeting_message, reply_markup=generate_keyboard(btn))
+    
 @Client.on_message(filters.command(["test2"]))
 async def test2(client, message):
-    user = db.get_user(message.from_user.id)
-    user.set_data({"domains": [] } )
-    await message.reply("test2")
+    user_language = "en"
+    strings = Translator(lang=user_language)
+    greeting_message = strings.get("greeting")
+    btn = strings.get("start_btn")
+    await message.reply(greeting_message, reply_markup=generate_keyboard(btn))
