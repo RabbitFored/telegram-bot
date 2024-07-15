@@ -1,6 +1,8 @@
-from pyrogram import Client
 import sys
-from .core import logger, ProcessManager
+
+from pyrogram import Client
+
+from .core import ProcessManager, logger
 from .core.shared import CONFIG
 
 #if version < 3.6, stop bot.

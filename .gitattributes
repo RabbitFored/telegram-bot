@@ -6,4 +6,4 @@ settings.yaml merge=ours
 app.json merge=ours
 Dockerfile merge=ours
 LICENSE merge=ours
-
+bot/translation/ merge=ours
