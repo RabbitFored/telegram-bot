@@ -1,4 +1,4 @@
-force_sub: false
+force_sub: true
 web: true
 
 LOG_CHANNEL: -1002233681213

@@ -45,7 +45,7 @@ class Translator:
               translation = key
       if kwargs:
           translation = translation.format(**kwargs)
-      return translation
+      return translation.replace('\\n', '\n')
 
   def switch_language(self, new_lang):
       self.lang = new_lang

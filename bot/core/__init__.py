@@ -2,6 +2,7 @@ import importlib
 from .logging import logger
 from . import user, database
 from .process import ProcessManager
+from .translation import Translator
 
 ALL_MODULES = ["user"]
 
