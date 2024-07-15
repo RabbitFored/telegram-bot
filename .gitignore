@@ -155,6 +155,7 @@ cython_debug/
 
 #replit
 .*
+.replit
 *.nix
 poetry.lock
 pyproject.toml
