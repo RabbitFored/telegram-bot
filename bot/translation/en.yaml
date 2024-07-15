@@ -39,12 +39,13 @@ about_txt: |-
    \n  - **Language**  : Python 3
    \n  - **Library**   : [Pyrogram](https://pyrogram.org/)
    \nIf you enjoy using me and want to help me survive, do donate with the /donate command - my creator will be very grateful! Doesn't have to be much - every little helps! Thanks for reading :)
-abot_btn: |-
+about_btn: |-
    [➰Channel](url::{channel_url}) [👥Support Group](url::{group_url})
    
 donate_txt: |-
    Thank you for your wish to contribute. I hope you enjoyed using our services. Make a small donation/contribute to let this project alive.
-donate_btn: "[➰Contribute](url::{repo_url}) [👥Paypal Us](url::{donation_url})"
+donate_btn: |-
+   [➰Contribute](url::{repo_url}) [👥Paypal Us](url::{donation_url})
 
 privacy_policy: |-
    **Privacy Policy:**
@@ -73,4 +74,5 @@ privacy_policy: |-
 
    **We may stop this service at any time without prior notice.**
 
-force_sub_txt: "Subscribe to {channel} to use this bot"
+force_sub_txt: |-
+   Subscribe to {channel} to use this bot
