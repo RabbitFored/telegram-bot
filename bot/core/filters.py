@@ -1,11 +1,13 @@
 import json
+
 from pyrogram import filters
-from ..core.shared import CONFIG
 from pyrogram.errors import UserNotParticipant
+
 from ..core import database as db
+from ..core.shared import CONFIG
+
 
 async def user_check(c, __, msg):
-  print("check")
   json_object = json.loads(f"{msg}")
   instance = json_object["_"]
 
@@ -49,10 +51,7 @@ class group(filters.Filter, set):
      self.groups = [] if groups is None else self.groups if isinstance(groups, list) else [groups]
 
    async def __call__(self, _, message):
-     if CONFIG.in_group(message.from_user.id, self.groups[0]):
-       return True
-     else:
-       return False
+     return bool(CONFIG.in_group(message.from_user.id, self.groups[0]))
 
 
 
