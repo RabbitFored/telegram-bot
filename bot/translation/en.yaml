@@ -4,9 +4,10 @@
 
 name: English
 natively: English
+code: en
 
 authors:
-   - Quantum
+   - RabbitFoRed
 
 #commons
 start_txt: |-
@@ -78,3 +79,5 @@ force_sub_txt: |-
    Subscribe to {channel} to use this bot
 force_sub_btn: |-
    [Subscribe](url::{channel_url})
+
+#plugins/admin

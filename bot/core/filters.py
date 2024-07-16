@@ -2,12 +2,15 @@ import json
 
 from pyrogram import filters
 from pyrogram.errors import UserNotParticipant
-
+from pyrogram.enums import ChatType
 from ..core import database as db
 from ..core.shared import CONFIG
 
 
 async def user_check(_, c, msg):
+  #if msg.chat.type:
+  if not msg.chat.type== ChatType.PRIVATE:
+    return False
   
   json_object = json.loads(f"{msg}")
   instance = json_object["_"]

@@ -2,17 +2,20 @@ from . import bot, CONFIG, logger
 from .core import filters as fltr
 from bot.core.utils import generate_keyboard
 from bot import strings
+from pyrogram import filters
 import os
 
 
 #check users in banlist and forcesub
 @bot.on_message(fltr.user_filter)
 async def user_check(client, message):
+
     channel_url = CONFIG.settings["links"]["channel_url"]
-    
+
     text = strings.get("force_sub_txt",
                        channel=f"@{channel_url.split('/')[-1]}")
-    keyboard = generate_keyboard(strings.get("force_sub_btn", channel_url=channel_url))
+    keyboard = generate_keyboard(
+        strings.get("force_sub_btn", channel_url=channel_url))
 
     await message.reply_text(
         text,

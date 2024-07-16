@@ -19,4 +19,5 @@ ProcessManager = ProcessManager()
 bot = Client("bot", api_id=CONFIG.apiID, api_hash=CONFIG.apiHASH, bot_token=CONFIG.botTOKEN, plugins= dict(root="bot/plugins"), alt_port=True)
 
 # Initialize strings
-strings = Translator(lang='en')
+strings = Translator()
+
