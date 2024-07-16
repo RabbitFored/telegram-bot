@@ -22,8 +22,6 @@ async def change_function(client, query):
 async def change_text(client, query):
   await query.answer()
   to_get = query.data[3:]
+  text = strings.get(to_get  + '_txt')
+  await query.message.edit(text)
 
-  text = getattr(strings, to_get+'_TEXT')
-  btn = getattr(strings, to_get + '_BTN')
-
-  await query.message.edit(text,reply_markup=utils.generate_keyboard(btn))

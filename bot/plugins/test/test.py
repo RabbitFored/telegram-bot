@@ -50,11 +50,8 @@ async def test(client, message):
 
 @Client.on_message(filters.command(["test"]))
 async def test(client, message):
-    user_language = "en"
-    strings = Translator(lang=user_language)
-    greeting_message = strings.get("start_msg", user=message.from_user.first_name)
-    btn = strings.get("start_btn")
-    await message.reply(greeting_message, reply_markup=generate_keyboard(btn))
+    user = db.get_user(message.from_user.id)
+    print(user.data["mails"])
     
 @Client.on_message(filters.command(["test2"]))
 async def test2(client, message):

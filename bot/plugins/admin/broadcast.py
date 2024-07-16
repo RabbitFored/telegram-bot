@@ -4,12 +4,21 @@ import time
 from bot.core import database as db
 from bot.core import filters as fltr
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from bot import ProcessManager
+import asyncio
+
+async def bcast(client, message):
+    while True:
+        await client.send_message(chat_id=message.chat.id, text="Test message")
+        await asyncio.sleep(2) 
 
 @Client.on_message(filters.command(["broadcast"]) & fltr.group("admin"))
 async def broadcast(client, message):
-        if PROCESSES.broadcast["status"]:
-            await message.reply_text("Another broadcast is already in progress. Please try again later.")
-            return
+        processes = ProcessManager.list_processes()
+        for p in processes:
+            if p.name == 'broadcast':
+                await message.reply_text("Another broadcast is already in progress. Please try again later.")
+                return
         broadcast_msg = message.reply_to_message
         if not broadcast_msg:
             await message.reply(

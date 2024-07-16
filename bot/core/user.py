@@ -2,8 +2,19 @@ from datetime import datetime, timedelta
 from ..core import database as db
 
 
-class USER:
+class Data(dict):
+   def __init__(self, userID, *args):
+        super().__init__(*args)
+        self.userID = userID
 
+   def addToSet(self, value):
+       db.update_user_data(self.userID, "$addToSet", value)
+   def set(self, value):
+       db.update_user_data(self.ID, "$set", value)
+   def rm(self, value):
+       db.update_user_data(self.ID, "$pull", value)
+
+class USER:
    def __init__(self, data):
       self.ID = data['userid']
       self.name = data['name']
@@ -12,7 +23,7 @@ class USER:
       self.status = data['status']
       self.is_banned = data['is_banned']
       self.warns = data['warns']
-      self.data = data['data']
+      self.data = Data(self.ID, data.get('data', {}))
       self.settings = data['settings']
       self.subscription = data['subscription']
       self.firstseen = data['firstseen']

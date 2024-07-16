@@ -7,7 +7,6 @@ from bot.core import database as db
 
 @Client.on_message(filters.command(["start"]))
 async def start(client, message):
-    strings.switch_language('ta')
     text = strings.get("start_txt", user=message.from_user.mention)
     keyboard = generate_keyboard(strings.get("start_btn"))
 

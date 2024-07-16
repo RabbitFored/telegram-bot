@@ -15,7 +15,7 @@ start_txt: |-
    I am a simple Telegram Bot.\n
    Hit /help to know more on using me.**
 start_btn: |-
-   [HELP](data::cf_commons.get_help)
+   [HELP](data::ct_help)
 
 help_txt: |-
    **Here is an detailed guide on using me.**
