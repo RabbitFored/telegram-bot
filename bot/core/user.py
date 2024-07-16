@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from ..core import database as db
-
+from .shared import CONFIG
 
 class Data(dict):
    def __init__(self, userID, *args):
@@ -30,8 +30,6 @@ class USER:
       self.lastseen = data['lastseen']
 
    def get_limits(self):
-      from mailable import CONFIG
-
       subscriptions = CONFIG.settings["subscriptions"]
       for subscription in subscriptions:
          if subscription["name"] == self.subscription['name']:
