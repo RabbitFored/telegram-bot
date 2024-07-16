@@ -43,4 +43,4 @@ class Translator:  #_instances = {}
                     translation = key
             if kwargs:
                 translation = translation.format(**kwargs)
-            return translation
+            return translation.replace("\\n","\n")
