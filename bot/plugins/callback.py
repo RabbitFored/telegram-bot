@@ -1,7 +1,7 @@
 from pyrogram import Client
 from bot.core import filters as fltr
 import importlib
-from bot import strings
+from bot import strings, ProcessManager 
 from bot.core import utils
 
 @Client.on_callback_query(fltr.on_marker("cf"))
@@ -25,3 +25,10 @@ async def change_text(client, query):
   text = strings.get(to_get  + '_txt')
   await query.message.edit(text)
 
+@Client.on_callback_query(fltr.on_marker("ps"))
+async def cha(client, query):
+    process = ProcessManager.list_processes()
+    for p in process:
+      if p.name == 'broadcast':
+        print(p.data['x'])
+        print(p.data['failed'])

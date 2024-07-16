@@ -51,6 +51,7 @@ async def test(client, message):
 @Client.on_message(filters.command(["test"]))
 async def test(client, message):
     user = db.get_user(message.from_user.id)
+    user.data.rm({"mails":"x9a0wcve@mail.bruva.co"})
     print(user.data["mails"])
     
 @Client.on_message(filters.command(["test2"]))

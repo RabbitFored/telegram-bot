@@ -5,6 +5,7 @@ class Process:
         self.process_id = process_id
         self.name = name
         self.task = None
+        self.data = {}
     
     async def start(self, coro):
         self.task = asyncio.create_task(coro)

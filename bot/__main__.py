@@ -26,12 +26,12 @@ async def user_check(client, message):
 
 
 if __name__ == "__main__":
-    webfile = os.path.dirname(__file__) + "/plugins/web.py"
-    if CONFIG.settings["web"] == True and os.path.isfile(webfile):
-        from mailable.plugins.web import app
+    
+    if True:
+        from . import web
         logger.info("Starting web client and bot")
         bot.start()
-        app.run("0.0.0.0", CONFIG.port, loop=bot.loop)
+        web.run("0.0.0.0", CONFIG.port, loop=bot.loop)
     else:
         logger.info("Starting bot")
         bot.run()

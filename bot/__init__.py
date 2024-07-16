@@ -1,5 +1,5 @@
 import sys
-
+from quart import Quart
 from pyrogram import Client
 
 from .core import ProcessManager, logger
@@ -17,7 +17,7 @@ ProcessManager = ProcessManager()
 
 # Initialize bot
 bot = Client("bot", api_id=CONFIG.apiID, api_hash=CONFIG.apiHASH, bot_token=CONFIG.botTOKEN, plugins= dict(root="bot/plugins"), alt_port=True)
-
+web = Quart(__name__)
 # Initialize strings
 strings = Translator()
 

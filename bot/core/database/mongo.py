@@ -86,11 +86,9 @@ def fetch_all():
   return userIDs
 
 def data_exists(data):
-  cursor = list(botdata.find({'data': data}))
-  if cursor:
-    return True
-  else:
-    return False
+  query = {f'data.{key}': value for key, value in data.items()}
+  cursor = list(botdata.find(query))
+  return bool(cursor)
 
 def find_data(data):
   query = {f'data.{key}': value for key, value in data.items()}
