@@ -10,9 +10,9 @@ class Data(dict):
    def addToSet(self, value):
        db.update_user_data(self.userID, "$addToSet", value)
    def set(self, value):
-       db.update_user_data(self.ID, "$set", value)
+       db.update_user_data(self.userID, "$set", value)
    def rm(self, value):
-       db.update_user_data(self.ID, "$pull", value)
+       db.update_user_data(self.userID, "$pull", value)
 
 class USER:
    def __init__(self, data):
