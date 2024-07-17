@@ -46,7 +46,7 @@ class USER:
 
    def upgrade(self, plan, transaction_id):
       db.update_user(
-         self.IF, {
+         self.ID, {
             "$set": {
                "subscription.name": plan,
                "subscription.subscription_date": datetime.now(),
