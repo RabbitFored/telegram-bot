@@ -3,6 +3,8 @@ from bot.core import filters as fltr
 import importlib
 from bot import strings, ProcessManager 
 from bot.core import utils
+from pyrogram import enums
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 @Client.on_callback_query(fltr.on_marker("cf"))
 async def change_function(client, query):
@@ -26,9 +28,27 @@ async def change_text(client, query):
   await query.message.edit(text)
 
 @Client.on_callback_query(fltr.on_marker("ps"))
-async def cha(client, query):
+async def ps(client, query):
     process = ProcessManager.list_processes()
     for p in process:
       if p.name == 'broadcast':
-        print(p.data['x'])
-        print(p.data['failed'])
+        keyboard = [
+          [
+              InlineKeyboardButton("Check Progress", callback_data="ps_broadcast"),
+          ]
+        ]
+        success = p.data['x']
+        failed = p.data['failed']
+        
+        count, total = success + failed, p.data["total"]
+        bar, percentage = utils.progressBar(count, total)
+
+        text = f'''
+<b>BROADCASTING {count} of {total}</b>
+success: {success}
+failed: {failed}
+
+| {bar} | {percentage}%
+        '''
+
+        await query.message.edit(text, reply_markup=InlineKeyboardMarkup(keyboard),parse_mode=enums.ParseMode.HTML)
