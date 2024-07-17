@@ -1,7 +1,7 @@
 import sys
 from quart import Quart
 from pyrogram import Client
-
+from quart import Quart, send_file, render_template
 from .core import ProcessManager, logger
 from .core.shared import CONFIG
 from .core import Translator
@@ -17,7 +17,11 @@ ProcessManager = ProcessManager()
 
 # Initialize bot
 bot = Client("bot", api_id=CONFIG.apiID, api_hash=CONFIG.apiHASH, bot_token=CONFIG.botTOKEN, plugins= dict(root="bot/plugins"), alt_port=True)
-web = Quart(__name__)
+web = Quart(__name__,template_folder='../public')
+
+@web.route('/')
+async def index():
+    return await render_template("index.html")
 # Initialize strings
 strings = Translator()
 
