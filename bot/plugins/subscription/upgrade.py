@@ -47,5 +47,6 @@ async def upgrade(client, message):
 
 @Client.on_message(filters.successful_payment)
 async def successful_payment(client, message):
-  db.user.upgrade(message.from_user.id, "premium")
+  user = db.get_user(message.from_user.id)
+  user.upgrade("premium", message.successful_payment.telegram_payment_charge_id)
   await message.reply("**Thank you for purchasing premium!**")

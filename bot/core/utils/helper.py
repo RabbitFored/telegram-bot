@@ -37,9 +37,9 @@ def get_user(message):
 def generate_user(userinfo, userdata):
    data = {
      "userid": userinfo['userid'],
-     "username": userinfo['username'][-1],
+     "username": userinfo['username'][-1] if userinfo['username'] else "",
      "dc": userinfo['dc'],
-     "name": userinfo['name'][-1],
+     "name": userinfo['name'][-1] if userinfo['username'] else "",
      "is_banned": bool(userinfo['is_banned'])
      or bool(userdata['is_banned']),
      "warns": userdata['warns'],

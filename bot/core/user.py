@@ -44,9 +44,9 @@ class USER:
    def rm_data(self, data):
       db.update_user_data(self.ID, "$pull", data)
 
-   def upgrade(self, userID, plan, transaction_id):
+   def upgrade(self, plan, transaction_id):
       db.update_user(
-         userID, {
+         self.IF, {
             "$set": {
                "subscription.name": plan,
                "subscription.subscription_date": datetime.now(),
