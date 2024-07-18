@@ -1,5 +1,5 @@
 <h1 align="center"> 
-    ✨ Mailable BOT ✨ 
+    ✨ Pyrogram BOT ✨ 
 </h1>
 A flexible telegram base bot
 
