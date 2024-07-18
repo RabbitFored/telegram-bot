@@ -1,11 +1,11 @@
 import json
 
 from pyrogram import filters
-from pyrogram.errors import UserNotParticipant
+from pyrogram.errors import UserNotParticipant, ChatAdminRequired
 from pyrogram.enums import ChatType
 from ..core import database as db
 from ..core.shared import CONFIG
-
+from ..core import logger
 
 async def user_check(_, c, msg):
   #if msg.chat.type:
@@ -37,11 +37,15 @@ async def user_check(_, c, msg):
 
   if bool(CONFIG.settings["force_sub"]):
     try:
-      await c.get_chat_member('theostrich', userID)
+      chat = CONFIG.settings["FORCE_SUB_CHANNEL"]
+      await c.get_chat_member(chat, userID)
       user_pass = True
-      
+    
     except UserNotParticipant:
       user_pass = False
+    except ChatAdminRequired:
+      logger.error("Chat Admin Permission Required to perform this function")
+      return True
   else:
     user_pass = True
 

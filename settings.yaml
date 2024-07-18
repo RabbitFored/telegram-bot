@@ -1,6 +1,7 @@
 force_sub: true
 web: true
 
+FORCE_SUB_CHANNEL: "@theostrich"
 LOG_CHANNEL: -1002233681213
 
 user_check:
