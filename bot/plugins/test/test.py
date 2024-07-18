@@ -2,8 +2,8 @@ from pyrogram import Client, filters
 from bot.core import database as db
 from bot.core.translation import Translator
 from bot.core.utils import generate_keyboard
-
-
+from bot import logger
+from bot.core.utils import generate_keyboard, gen_rand_string
 '''
 def read_and_modify_one_block_of_yaml_data(filename, key, value):
     with open(f'{filename}.yaml', 'r') as f:
@@ -50,9 +50,7 @@ async def test(client, message):
 
 @Client.on_message(filters.command(["test"]))
 async def test(client, message):
-    user = db.get_user(message.from_user.id)
-    user.data.rm({"mails":"x9a0wcve@mail.bruva.co"})
-    print(user.data["mails"])
+    logger.info(gen_rand_string(4200).lower())
     
 @Client.on_message(filters.command(["test2"]))
 async def test2(client, message):

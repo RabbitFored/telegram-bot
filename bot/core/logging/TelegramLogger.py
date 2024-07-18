@@ -11,10 +11,12 @@ class TelegramHandler(logging.Handler):
 
     def emit(self, record):
         log_entry = self.format(record)
-        utils.botapi(
+        logs = utils.chunkstring(log_entry, 4000)
+        for log in logs:
+            utils.botapi(
             "sendMessage", {
                 "chat_id": self.chat_id,
-                "text": f"<code>{log_entry}</code>",
+                "text": f"<code>{log}</code>",
                 "message_thread_id": 2,
                 "parse_mode": "html"
             })
