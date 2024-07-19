@@ -36,13 +36,13 @@ async def upgrade(client, message):
 
   await client.send_invoice(
     message.chat.id,
-    title="Premium",
+    title="Subscribe | Monthly",
     description="Subscribe to mailable premium for a month",
     currency="XTR",
-    prices=[LabeledPrice(label="Mailable Premium", amount=100)],
+    prices=[LabeledPrice(label="Mailable Premium", amount=50)],
     start_parameter="start",
     reply_markup=(InlineKeyboardMarkup(
-      [[InlineKeyboardButtonBuy(text="Pay ⭐️100")]])))
+      [[InlineKeyboardButtonBuy(text="Pay ⭐️50")]])))
 
 
 @Client.on_message(filters.successful_payment)
