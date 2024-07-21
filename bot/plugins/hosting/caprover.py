@@ -18,5 +18,5 @@ def redeploy_app_via_api(app_name):
 @Client.on_message(filters.command("deploy") & fltr.group("admin"))
 async def set_log_level(client, message):
     print("redeploying")
-    redeploy_app_via_api("cap_app_name")
-    
+    redeploy_app_via_api(os.environ['cap_app_name'])
+
