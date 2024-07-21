@@ -1,9 +1,9 @@
-from caprover_api import CaproverAPI
+from caprover_api import caprover_api
 import os
 from pyrogram import Client, filters
 from bot.core import filters as fltr
 
-cap = CaproverAPI(
+cap = caprover_api.CaproverAPI(
     dashboard_url= os.environ['cap_url'],
     password= os.environ['cap_password']
 )
