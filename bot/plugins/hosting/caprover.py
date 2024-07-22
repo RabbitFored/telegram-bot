@@ -9,4 +9,3 @@ import requests
 async def build(client, message):
     logger.info("redeploying")
     requests.post(os.environ['caprover_build_token'])
-
