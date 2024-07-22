@@ -103,3 +103,12 @@ def find_data(data):
 def update_user_data(userID, method, data):
   d = {f'data.{key}': value for key, value in data.items()}
   update_user(userID, { method :  d })
+
+def delete_user(userID):
+  userinfo = usercache.find_one(utils.make_filter(userID))
+  if userinfo:
+    objInstance = ObjectId(userinfo["_id"])
+    botdata.delete_one({"user": objInstance})
+    return True
+  else:
+    return False

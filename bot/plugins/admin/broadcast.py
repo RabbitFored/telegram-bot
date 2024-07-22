@@ -1,11 +1,12 @@
 #from mailable import logger, CONFIG, PROCESSES
 from pyrogram import filters, Client
-import time
+from bot import logger
 from bot.core import database as db
 from bot.core import filters as fltr
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from bot import ProcessManager, CONFIG
 import asyncio
+from pyrogram.errors import InputUserDeactivated
 
 async def bcast(mode, msg, process):
     process.data["x"] = 0
@@ -22,7 +23,9 @@ async def bcast(mode, msg, process):
 
                 process.data["x"] += 1
                 await asyncio.sleep(2)
-
+        except InputUserDeactivated:
+            db.delete_user(user)
+            logger.info(f"removed deactivated user {user} from db")
         except:
                 process.data["failed"]+= 1 
 

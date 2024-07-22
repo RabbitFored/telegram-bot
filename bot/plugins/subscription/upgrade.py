@@ -9,12 +9,13 @@ async def premium(client, message):
   pre_text = '''
 The bot offers a free limit to set 3 mails
 
-**Need more?** Get a Premium subscription is for only 100stars/month
+**Need more?** Get a Premium subscription is for only 50stars/month
 
 **The Premium subscription includes:**
 __
- - Acquire upto 10 mail IDs.        
+ - Acquire upto 7 mail IDs.        
  - Set custom domains*
+ - send mails
 __ 
  
 *domain not included
