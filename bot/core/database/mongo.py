@@ -105,10 +105,12 @@ def update_user_data(userID, method, data):
   update_user(userID, { method :  d })
 
 def delete_user(userID):
-  userinfo = usercache.find_one(utils.make_filter(userID))
+  filter = utils.make_filter(userID)
+  userinfo = usercache.find_one(filter)
   if userinfo:
     objInstance = ObjectId(userinfo["_id"])
     botdata.delete_one({"user": objInstance})
+    usercache.delete_one(filter)
     return True
   else:
     return False
