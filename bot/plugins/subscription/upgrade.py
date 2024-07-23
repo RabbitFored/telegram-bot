@@ -3,24 +3,13 @@ from pyrogram.types import LabeledPrice, InlineKeyboardMarkup, InlineKeyboardBut
 from bot.core import database as db
 from bot.core import filters as fltr
 from bot.core.utils import generate_keyboard
+from bot import strings
 
 @Client.on_message(filters.command(["premium", "subscribe"]))
 async def premium(client, message):
-  pre_text = '''
-The bot offers a free limit to set 3 mails
-
-**Need more?** Get a Premium subscription is for only 50stars/month
-
-**The Premium subscription includes:**
-__
- - Acquire upto 7 mail IDs.        
- - Set custom domains*
- - send mails
-__ 
- 
-*domain not included
-'''
-  btn = "[Upgrade To Premium](data::cf_subscription.upgrade)"
+  
+  pre_text = strings.get("premium_msg")
+  btn = strings.get("premium_btn")
   
   keyboard = generate_keyboard(btn)
 
