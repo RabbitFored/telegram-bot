@@ -1,8 +1,8 @@
 from ..shared import CONFIG
 import requests
 
-def botapi(method, data):
-  baseURL = f"https://api.telegram.org/bot{CONFIG.botTOKEN}/"
+def botapi(method, data, bot_token=CONFIG.botTOKEN):
+  baseURL = f"https://api.telegram.org/bot{bot_token}/"
   url = baseURL + method
   r = requests.post(url,json=data)
   return r.json()
