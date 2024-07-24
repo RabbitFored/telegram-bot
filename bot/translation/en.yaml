@@ -80,4 +80,19 @@ force_sub_txt: |-
 force_sub_btn: |-
    [Subscribe](url::{channel_url})
 
+premium_txt: |-
+   The bot offers a free limit to set 3 mails
+
+   **Need more?** Get a Premium subscription is for only 50stars/month
+
+   **The Premium subscription includes:**
+   __
+    - Acquire upto 7 mail IDs.        
+    - Set custom domains*
+    - send mails (from default domains)
+   __ 
+
+   *domain not included
+premium_btn: |-
+   [Upgrade To Premium](data::cf_subscription.upgrade)
 #plugins/admin
