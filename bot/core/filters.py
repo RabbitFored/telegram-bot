@@ -45,7 +45,7 @@ async def user_check(_, c, msg):
       user_pass = False
     except ChatAdminRequired:
       logger.error("Chat Admin Permission Required to perform this function")
-      return True
+      return False
   else:
     user_pass = True
 
