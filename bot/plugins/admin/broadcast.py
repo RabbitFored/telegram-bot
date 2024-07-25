@@ -6,7 +6,7 @@ from bot.core import filters as fltr
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from bot import ProcessManager, CONFIG
 import asyncio
-from pyrogram.errors import InputUserDeactivated
+from pyrogram.errors import FloodWait, InputUserDeactivated, UserIsBlocked, PeerIdInvalid
 
 async def bcast(mode, msg, process):
     process.data["x"] = 0
@@ -20,14 +20,23 @@ async def bcast(mode, msg, process):
                 await msg.copy(user)
             else:
                 await msg.forward(user)
-
-                process.data["x"] += 1
-                await asyncio.sleep(2)
+            process.data["x"] += 1
+        except FloodWait as e:
+            process.data["failed"]+= 1
+            await asyncio.sleep(e.value)
+            logger.info("FloodWait: " + str(e))
+        except UserIsBlocked:
+            process.data["failed"]+= 1
         except InputUserDeactivated:
+            process.data["failed"]+= 1 
             db.delete_user(user)
             logger.info(f"removed deactivated user {user} from db")
-        except:
-                process.data["failed"]+= 1 
+        except PeerIdInvalid:
+            logger.info(f"{user} : user id invalid\n")
+            db.delete_user(user)
+        except Exception as e:
+            process.data["failed"]+= 1 
+            logger.info(f"Error: {e}")
 
 @Client.on_message(filters.command(["broadcast"]) & fltr.group("admin"))
 async def broadcast(client, message):
