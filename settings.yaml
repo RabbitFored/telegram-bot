@@ -14,18 +14,28 @@ translation:
    dir: "bot/translation"
    default_language: "en"
    
-logs:
-    log_level: "INFO"
-    telegram:
-    #NOTSET, DEBUG, INFO, WARNING, ERROR, CRITICAL
-      chat: -1002233681213
-      thread: 2
-      chunk: 4000
-    file:
-      dir: "logs"
-      file_name: "bot.log"
-      maxSize: "1 MB" 
-      backupCount: 5
+logging:
+    loggers:
+        root:
+          level: "INFO"      #{'CRITICAL': 50, 'FATAL': 50, 'ERROR': 40, 'WARN': 30, 'WARNING': 30, 'INFO': 20, 'DEBUG': 10, 'NOTSET': 0}
+          handlers: ["telegram", "file"]
+        tgbot:
+          level: "INFO"
+        pyrogram:
+          level: "WARNING"
+        pyrogram.parser.html:
+          level: "ERROR"
+        pyrogram.session.session:
+          level: "ERROR"
+    handlers:
+      telegram:
+        chat: -1002233681213
+        thread: 2
+        chunk: 4000
+      file:
+        path: "logs/bot.log"
+        maxSize: "1 MB" 
+        backupCount: 5
     
 FORCE_SUB_CHANNEL: "@theostrich"
 

@@ -1,7 +1,7 @@
 import importlib
 import glob
 from os.path import basename, dirname, isfile
-from .connection import usercache, botdata
+from .connection import usercache, botdata, bot_db
 
 
 

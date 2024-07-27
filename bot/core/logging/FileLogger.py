@@ -12,19 +12,20 @@ def get_bytes(size):
 formatter = logging.Formatter(
 '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-file_logger = CONFIG.settings["logs"]["file"]
-if CONFIG.settings["logs"]["file"]:
+file_logger = CONFIG.settings["logging"]["handlers"]["file"]
+if file_logger:
    root_logger = logging.getLogger()
+   path = file_logger.get("path", "logs/bot.log")
+   dir, filename  =  os.path.split(path)
    
-   dir = file_logger.get("dir", "logs")
    if not os.path.exists(dir):
       os.makedirs(dir)
-   filename = os.path.join(dir, file_logger.get("filename","bot.log"))
+
    maxBytes = get_bytes(file_logger.get("maxSize", "1 MB"))
    backupCount = int(file_logger.get("backupCount", 5))
    
    
-   fileHandler = RotatingFileHandler(filename,
+   fileHandler = RotatingFileHandler(path,
       maxBytes=maxBytes,
          backupCount=backupCount)
   #fileHandler.setLevel(logging.INFO)

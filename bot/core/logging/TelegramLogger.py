@@ -6,7 +6,7 @@ from .handlers import TelegramHandler
 
 formatter = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
 
-tg_logger = CONFIG.settings["logs"]["telegram"]
+tg_logger = CONFIG.settings["logging"]["handlers"]["telegram"]
 if tg_logger:
     root_logger = logging.getLogger()
 

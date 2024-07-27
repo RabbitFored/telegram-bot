@@ -1,4 +1,4 @@
-from . import usercache, botdata
+from . import usercache, botdata, bot_db
 from bson.objectid import ObjectId
 from .. import utils
 
@@ -120,3 +120,13 @@ def delete_user(userID):
     return True
   else:
     return False
+
+def statial(what,how):
+  collection = bot_db["statial"]
+  collection.update_one( {}, {"$inc": { what : how }} )
+  return "ok"
+
+def get_statial():
+  collection = bot_db["statial"]
+  value = collection.find_one()
+  return value
