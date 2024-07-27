@@ -2,10 +2,10 @@ from pyrogram import Client, filters
 from pyrogram.raw.types import channel
 from bot import strings, CONFIG
 from bot.core.utils import generate_keyboard
-from bot.core import database as db
+from bot.core import database as db, filters as fltr
 
 
-@Client.on_message(filters.command(["start"]))
+@Client.on_message(fltr.cmd(["start"]))
 async def start(client, message):
     text = strings.get("start_txt", user=message.from_user.mention)
     keyboard = generate_keyboard(strings.get("start_btn"))

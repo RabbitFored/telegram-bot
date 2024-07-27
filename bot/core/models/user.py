@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
-from ..core import database as db
-from .shared import CONFIG
+from ...core import database as db
+from ..shared import CONFIG
 
 class Data(dict):
    def __init__(self, userID, *args):

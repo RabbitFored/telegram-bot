@@ -1,36 +1,23 @@
 import logging
 from .. import utils
 from ..shared import CONFIG
+from .handlers import TelegramHandler
 
 
-class TelegramHandler(logging.Handler):
+formatter = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
 
-    def __init__(self, chat_id, thread_id=None, level=logging.NOTSET):
-        super().__init__(level)
-        self.chat_id = chat_id
-        self.thread_id = thread_id
+tg_logger = CONFIG.settings["logs"]["telegram"]
+if tg_logger:
+    root_logger = logging.getLogger()
+
+    log_chat = tg_logger.get("chat", None)
+    if log_chat:
+        log_thread = tg_logger.get("thread", None)
+        chunk = tg_logger.get("chunk", 4000)
+        tgHandler = TelegramHandler(chat_id=log_chat,thread_id=log_thread, chunk=chunk)
+        tgHandler.setFormatter(formatter)
+        tgHandler.setLevel(logging.INFO)
+        root_logger.addHandler(tgHandler)
+    else:
+        root_logger.warn("No chat ID for logging")
         
-    def emit(self, record):
-        log_entry = self.format(record)
-        logs = utils.chunkstring(log_entry, 4000)
-        for log in logs:
-            data = {
-                "chat_id": self.chat_id,
-                "text": f"<code>{log}</code>",
-                "parse_mode": "html"
-            }
-            if self.thread_id:
-                data["message_thread_id"] = self.thread_id
-            utils.botapi("sendMessage", data)
-            
-
-
-LOG_CHANNEL = CONFIG.settings.get("LOG_CHANNEL", None)
-LOG_THREAD = CONFIG.settings.get("LOG_THREAD", None)
-if LOG_CHANNEL:
-    tgHandler = TelegramHandler(chat_id=LOG_CHANNEL,thread_id=LOG_THREAD)
-    tgHandler.setLevel(logging.INFO)
-    formatter = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
-    tgHandler.setFormatter(formatter)
-else:
-    tgHandler = None

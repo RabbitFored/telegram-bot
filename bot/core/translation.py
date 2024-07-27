@@ -5,12 +5,13 @@ import yaml
 from . import logger
 
 
-class Translator:  #_instances = {}
-    default_language = 'en'
+class Translator: 
+    
     translations = {}
   
-    def __init__(self):
-        translation_dir = 'bot/translation'
+    def __init__(self, dir, default_language="en"):
+        self.default_language = default_language
+        translation_dir = dir
         for filename in os.listdir(translation_dir):
             if filename.endswith('.yaml'):
                 lang = filename.split('.')[0]

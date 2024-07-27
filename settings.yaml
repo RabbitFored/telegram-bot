@@ -1,9 +1,34 @@
 force_sub: true
 web: true
 
+pyrogram:
+  plugin_dir: "bot/plugins"
+  test_mode: false
+  in_memory_session: false
+  
+commands:
+   prefix: ["/", "."]
+   case_sensitive: false
+   
+translation:
+   dir: "bot/translation"
+   default_language: "en"
+   
+logs:
+    log_level: "INFO"
+    telegram:
+    #NOTSET, DEBUG, INFO, WARNING, ERROR, CRITICAL
+      chat: -1002233681213
+      thread: 2
+      chunk: 4000
+    file:
+      dir: "logs"
+      file_name: "bot.log"
+      maxSize: "1 MB" 
+      backupCount: 5
+    
 FORCE_SUB_CHANNEL: "@theostrich"
-LOG_CHANNEL: -1002233681213
-LOG_THREAD: 2
+
 
 user_check:
   force_sub: false

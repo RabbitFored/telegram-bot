@@ -77,3 +77,9 @@ def on_marker(data):
       d = query.data.split("_")[0]
       return flt.data == d
   return filters.create(func, data=data)
+
+def cmd(commands):
+  prefixes = CONFIG.settings["commands"]["prefix"]
+  case_sensitive = CONFIG.settings["commands"]["case_sensitive"]
+  
+  return filters.command(commands, prefixes,case_sensitive=case_sensitive)

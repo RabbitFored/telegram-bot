@@ -1,12 +1,5 @@
 import importlib
 from .logging import logger
-from . import user, database
+from . import database
 from .process import ProcessManager
 from .translation import Translator
-
-ALL_MODULES = ["user"]
-
-for i in ALL_MODULES:
-  mdl = importlib.import_module(f'bot.core.{i}')
-  names = [x for x in mdl.__dict__ if not x.startswith("_")]
-  globals().update({k: getattr(mdl, k) for k in names})

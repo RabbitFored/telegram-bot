@@ -1,7 +1,8 @@
 import regex as re
-from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-def generate_keyboard(markdown):
+
+def ikb(markdown):
   pattern = re.compile(r'\[([^][]+)\](\(((?:[^()]+|(?2))+)\))')
   
   rows = list(filter(None, markdown.split("\n") ))
@@ -24,3 +25,5 @@ def generate_keyboard(markdown):
     keyboard.append(buttons)
   
   return InlineKeyboardMarkup(keyboard)
+
+generate_keyboard = ikb

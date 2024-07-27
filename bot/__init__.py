@@ -22,6 +22,10 @@ web = Quart(__name__,template_folder='../public')
 @web.route('/')
 async def index():
     return await render_template("index.html")
+    
 # Initialize strings
-strings = Translator()
+default_language = CONFIG.settings["translation"]["default_language"]
+lang_dir = CONFIG.settings["translation"]["dir"]
+
+strings = Translator(dir=lang_dir, default_language=default_language)
 
