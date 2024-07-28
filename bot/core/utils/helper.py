@@ -40,12 +40,12 @@ def generate_user(userinfo, userdata):
      "username": userinfo['username'][-1] if userinfo['username'] else "",
      "dc": userinfo['dc'],
      "name": userinfo['name'][-1] if userinfo['username'] else "",
-     "is_banned": bool(userinfo['is_banned'])
-     or bool(userdata['is_banned']),
-     "warns": userdata['warns'],
+     "is_banned": bool(userinfo.get("is_banned",False))
+     or bool(userdata.get("is_banned",False)),
+     "warns": userdata.get("warns",0),
      "subscription": userdata.get("subscription", {"name": "free"}),
-     "status": userdata['status'],
-     "data": userdata['data'],
+     "status": userdata.get("status","active"),
+     "data": userdata.get("data", {}),
      "settings": userdata.get("settings",{}),
      "firstseen": userdata['firstseen'],
      "lastseen": userdata['lastseen']

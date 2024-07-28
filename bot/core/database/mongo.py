@@ -29,9 +29,9 @@ def init_userinfo(msg):
     "name": [name],
     "username": [username],
     "dc": dc,
-    "is_banned": False,
-  # "groups": [],
-    "enrolls": [1904425008],
+    #"is_banned": False,
+    #"groups": [],
+    #"enrolls": [1904425008],
     "firstseen": now,
     "lastseen": now
   }
@@ -47,13 +47,13 @@ def init_userinfo(msg):
 def init_userdata(userObjectID, now):
   userdata = {
     "user": userObjectID,
-    "status": "active",
-    "is_banned": False,
-    "warns": 0,
-  # "subscription": {
+  #  "status": "active",
+  #  "is_banned": False,
+  #  "warns": 0,
+  #  "subscription": {
   #     "name": "free",
   #   },
-    "data": {},
+  #  "data": {},
   #    "settings": {},
     "firstseen": now,
     "lastseen": now
