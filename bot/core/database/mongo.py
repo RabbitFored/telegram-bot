@@ -81,8 +81,8 @@ def update_user(userID, newvalues):
   filter = {'user': ObjectId(userinfo['_id'])}
   botdata.update_one(filter, newvalues)
 
-def update_user_info(userID, newvalues):
-  usercache.find_one(utils.make_filter(userID),newvalues )
+def update_user_info(userID,newvalues):
+  usercache.update_one(utils.make_filter(userID), newvalues )
 
 def fetch_all():
   userdata = botdata.find({"status" : "active"}, {"_id": 0, 'user': 1 })

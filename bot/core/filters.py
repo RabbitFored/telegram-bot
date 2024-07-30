@@ -9,7 +9,7 @@ from ..core import logger
 
 async def user_check(_, c, msg):
   #if msg.chat.type:
-  if not msg.chat.type== ChatType.PRIVATE:
+  if not msg.chat.type == ChatType.PRIVATE:
     return False
   
   json_object = json.loads(f"{msg}")
@@ -22,8 +22,13 @@ async def user_check(_, c, msg):
   elif instance == "InlineQuery":
     userID = msg.from_user.id
   else:
-    print(instance)
-
+    logger.warn(instance)
+    return False
+  me = await c.get_me()
+  
+  if userID == me.id:
+    return False
+  
   user = db.get_user(userID)
 
   if not user:
