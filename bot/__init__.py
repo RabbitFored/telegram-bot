@@ -5,6 +5,7 @@ from quart import Quart, send_file, render_template
 from .core import ProcessManager, logger
 from .core.shared import CONFIG
 from .core import Translator
+import os
 #if version < 3.6, stop bot.
 if sys.version_info[0] < 3 or sys.version_info[1] < 6:
     logger.error(
@@ -29,3 +30,9 @@ lang_dir = CONFIG.settings["translation"]["dir"]
 
 strings = Translator(dir=lang_dir, default_language=default_language)
 
+#make temp dir
+try:
+    os.makedirs("tmp", exist_ok=True)
+    print("Directory '%s' created successfully")
+except OSError as error:
+    print("Directory '%s' can not be created")
