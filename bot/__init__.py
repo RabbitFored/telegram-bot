@@ -6,6 +6,8 @@ from .core import ProcessManager, logger
 from .core.shared import CONFIG
 from .core import Translator
 import os
+import tempfile 
+
 #if version < 3.6, stop bot.
 if sys.version_info[0] < 3 or sys.version_info[1] < 6:
     logger.error(
@@ -32,7 +34,8 @@ strings = Translator(dir=lang_dir, default_language=default_language)
 
 #make temp dir
 try:
-    os.makedirs("tmp", exist_ok=True)
-    print("Directory '%s' created successfully")
+    os.makedirs("/tmp/bot", exist_ok=True)
+    tempfile.tempdir = "/tmp/bot"
+    print("Directory created successfully")
 except OSError as error:
-    print("Directory '%s' can not be created")
+    print("Directory can not be created")
