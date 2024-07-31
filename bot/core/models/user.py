@@ -80,10 +80,10 @@ class USER:
          db.update_user(self.ID, {"$unset": {"status": ""}})
 
       #set dc
-      if pre_user.dc == 0 and msg.from_user.dc:
+      if pre_user.dc == 0 and msg.from_user.dc_id:
          db.update_user_info(msg.from_user.id,
                              {"$set": {
-                                 "dc": msg.from_user.dc
+                                 "dc": msg.from_user.dc_id
                              }})
 
       #update user info
