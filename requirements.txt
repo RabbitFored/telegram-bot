@@ -1,12 +1,9 @@
-constants==0.6.0
-dnspython==2.3.0
-Quart==0.19.6
-pymongo==4.4.1
-Markdown==3.4.3
 pyrofork
 tgcrypto-pyrofork
+dnspython==2.6.1
+Quart==0.19.6
+pymongo==4.4.1
 PyYAML==6.0
-tldextract==3.4.4
 requests-toolbelt==1.0.0
 mail-parser==3.15.0
 regex
