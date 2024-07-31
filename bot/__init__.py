@@ -6,7 +6,7 @@ from .core import ProcessManager, logger
 from .core.shared import CONFIG
 from .core import Translator
 import os
-import tempfile 
+import tempfile
 
 #if version < 3.6, stop bot.
 if sys.version_info[0] < 3 or sys.version_info[1] < 6:
@@ -19,13 +19,29 @@ if sys.version_info[0] < 3 or sys.version_info[1] < 6:
 ProcessManager = ProcessManager()
 
 # Initialize bot
-bot = Client("bot", api_id=CONFIG.apiID, api_hash=CONFIG.apiHASH, bot_token=CONFIG.botTOKEN, plugins= dict(root="bot/plugins"), alt_port=True)
-web = Quart(__name__,template_folder='../public')
+bot = Client(
+    "bot",
+    api_id=CONFIG.apiID,
+    api_hash=CONFIG.apiHASH,
+    bot_token=CONFIG.botTOKEN,
+    plugins=dict(
+        root=CONFIG.settings.get('pyrogram').get("plugin_dir", "bot/plugins")),
+    alt_port=bool(CONFIG.settings.get('pyrogram').get("alt_port", False)),
+    test_mode=bool(CONFIG.settings.get('pyrogram').get("test_mode", False)),
+    in_memory=bool(
+        CONFIG.settings.get('pyrogram').get("in_memory_session", False)),
+    ipv6=bool(
+        CONFIG.settings.get('pyrogram').get("use_ipv6", False))
+)
+
+web = Quart(__name__, template_folder='../public')
+
 
 @web.route('/')
 async def index():
     return await render_template("index.html")
-    
+
+
 # Initialize strings
 default_language = CONFIG.settings["translation"]["default_language"]
 lang_dir = CONFIG.settings["translation"]["dir"]

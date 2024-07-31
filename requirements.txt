@@ -4,6 +4,7 @@ Quart==0.19.6
 pymongo==4.4.1
 Markdown==3.4.3
 pyrofork
+tgcrypto-pyrofork
 PyYAML==6.0
 tldextract==3.4.4
 requests-toolbelt==1.0.0

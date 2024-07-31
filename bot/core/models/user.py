@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from os import pread
 from ...core import database as db
 from ..shared import CONFIG
-
+import requests
 
 class Data(dict):
 
@@ -120,6 +120,15 @@ class USER:
          if not self.subscription["name"] == "free":
             if now > self.subscription['expiry_date']:
                self.remove_subscription(self.ID)
+               data = {
+                  "chat_id": self.ID,
+                  "text": "<b>Your subscription expired.\n\nUse /upgrade to continue enjoying premium features</b>",
+                  "parse_mode": "html"
+                  }
+               
+               r = requests.post(f"https://api.telegram.org/bot{CONFIG.botTOKEN}/sendMessage", 
+                                 json=data)
+      
 
    def ban(self):
       db.update_user(self.ID, {"$set": {"is_banned": True}})

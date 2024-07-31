@@ -1,11 +1,17 @@
 force_sub: true
 web: true
 
+app_name: bot
+app_version: 1.0.0
+
 pyrogram:
+  client_name: "bot"
   plugin_dir: "bot/plugins"
   test_mode: false
+  alt_port: true
   in_memory_session: false
-  
+  use_ipv6: false
+
 commands:
    prefix: ["/", "."]
    case_sensitive: false
@@ -73,7 +79,7 @@ broadcast:
 
 
 MongoDB:
-  database: tesseract
+  database: mailable
 
 links:
   channel_url: "t.me/theostrich"

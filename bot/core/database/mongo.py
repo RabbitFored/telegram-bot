@@ -1,6 +1,7 @@
 from . import usercache, botdata, bot_db
 from bson.objectid import ObjectId
 from .. import utils
+from datetime import datetime, timedelta
 
 
 def get_user(userID):
@@ -130,3 +131,14 @@ def get_statial():
   collection = bot_db["statial"]
   value = collection.find_one()
   return value
+
+def get_active_users():
+  total_users = botdata.count_documents({})
+  active_users = botdata.count_documents({
+      'lastseen': {'$gte': datetime.now() - timedelta(days=7)}
+  })
+
+  return {
+      'total_users': total_users,
+      'active_users': active_users
+  }
