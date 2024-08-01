@@ -5,7 +5,7 @@ from pyrogram.errors import UserNotParticipant, ChatAdminRequired
 from pyrogram.enums import ChatType
 from ..core import database as db
 from ..core.shared import CONFIG
-from ..core import logger
+from ..core import logger, antiflood
 
 async def user_check(_, c, msg):
   #if msg.chat.type:
@@ -24,6 +24,11 @@ async def user_check(_, c, msg):
   else:
     logger.warn(instance)
     return False
+  
+  if antiflood.is_flooding(userID):
+    logger.warning(f"User {userID} is flooding.")
+    return
+
   me = await c.get_me()
   
   if userID == me.id:
@@ -39,6 +44,7 @@ async def user_check(_, c, msg):
       return True
   
   user_pass = False
+  
 
   if bool(CONFIG.settings["force_sub"]):
     try:

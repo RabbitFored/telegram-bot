@@ -35,7 +35,7 @@ async def bcast(mode, msg, process):
             logger.info(f"removed deactivated user {user} from db")
         except PeerIdInvalid:
             logger.info(f"{user} : user id invalid\n")
-            db.delete_user(user)
+            # db.delete_user(user)
         except Exception as e:
             process.data["failed"]+= 1 
             logger.info(f"Error: {e}")

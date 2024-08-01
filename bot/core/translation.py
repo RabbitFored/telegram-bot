@@ -15,12 +15,12 @@ class Translator:
         for filename in os.listdir(translation_dir):
             if filename.endswith('.yaml'):
                 lang = filename.split('.')[0]
-                self.translations[lang] = self.load_translations(lang)
+                self.translations[lang] = self.load_translations(translation_dir, lang)
 
-    def load_translations(self, lang):
+    def load_translations(self,translation_dir, lang):
         translations = {}
         try:
-            with open(os.path.join('bot/translation', f'{lang}.yaml'), 'r') as file:
+            with open(os.path.join(translation_dir, f'{lang}.yaml'), 'r') as file:
                 translations = yaml.safe_load(file)
         except FileNotFoundError:
             if lang != self.default_language:

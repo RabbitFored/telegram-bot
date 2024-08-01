@@ -37,12 +37,6 @@ def init_userinfo(msg):
     "lastseen": now
   }
   r = usercache.insert_one(userinfo)
-  utils.botapi("sendMessage" , {
-     "chat_id": -1002233681213,
-     "message_thread_id": 3299,
-     "text": f"<code>{userID}</code>",
-     "parse_mode": "html"
-  })
   return r
 
 def init_userdata(userObjectID, now):
