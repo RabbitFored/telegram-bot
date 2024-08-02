@@ -9,6 +9,11 @@ from ..core import logger, antiflood
 
 async def user_check(_, c, msg):
   #if msg.chat.type:
+  
+  #set self
+  if not CONFIG.me:
+    CONFIG.me = await c.get_me()
+  
   if not msg.chat.type == ChatType.PRIVATE:
     return False
   
@@ -29,9 +34,9 @@ async def user_check(_, c, msg):
     logger.warning(f"User {userID} is flooding.")
     return
 
-  me = await c.get_me()
   
-  if userID == me.id:
+  
+  if userID == CONFIG.me.id:
     return False
   
   user = db.get_user(userID)

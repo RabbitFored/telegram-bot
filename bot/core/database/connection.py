@@ -7,5 +7,5 @@ usercache_db = usercache_client['TELEGRAM']
 usercache = usercache_db['usercache']
 
 bot_client = MongoClient(CONFIG.mongouri)
-bot_db = bot_client[CONFIG.settings["MongoDB"]["database"]] 
+bot_db = bot_client[CONFIG.database] 
 botdata = bot_db['botdata']

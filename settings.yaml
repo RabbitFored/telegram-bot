@@ -1,16 +1,14 @@
-force_sub: true
-web: true
-
 app_name: bot
 app_version: 1.0.0
 
 pyrogram:
   client_name: "bot"
   plugin_dir: "bot/plugins"
-  test_mode: false
-  alt_port: true
-  in_memory_session: false
+  test_mode: false            #connect to test servers 
+  alt_port: true              #if true, port 5222 will be used to connect to Telegram.
+  in_memory_session: false    #defaults to true when using session_string
   use_ipv6: false
+  use_mongodb_for_session: true
 
 commands:
    prefix: ["/", "."]
@@ -45,6 +43,8 @@ logging:
     
 FORCE_SUB_CHANNEL: "@theostrich"
 
+force_sub: true
+web: true
 
 user_check:
   force_sub: false

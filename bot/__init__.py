@@ -7,6 +7,7 @@ from .core.shared import CONFIG
 from .core import Translator
 import os
 import tempfile
+from motor.motor_asyncio import AsyncIOMotorClient
 
 #if version < 3.6, stop bot.
 if sys.version_info[0] < 3 or sys.version_info[1] < 6:
@@ -19,11 +20,16 @@ if sys.version_info[0] < 3 or sys.version_info[1] < 6:
 ProcessManager = ProcessManager()
 
 # Initialize bot
+if bool(CONFIG.settings["pyrogram"].get("use_mongodb_for_session",False)):
+    mongo_session = dict(connection=AsyncIOMotorClient(CONFIG.mongouri), remove_peers=False)
+else: 
+    mongo_session = None
 bot = Client(
     "bot",
     api_id=CONFIG.apiID,
     api_hash=CONFIG.apiHASH,
     bot_token=CONFIG.botTOKEN,
+    session_string = CONFIG.session_string,
     plugins=dict(
         root=CONFIG.settings.get('pyrogram').get("plugin_dir", "bot/plugins")),
     alt_port=bool(CONFIG.settings.get('pyrogram').get("alt_port", False)),
@@ -31,8 +37,10 @@ bot = Client(
     in_memory=bool(
         CONFIG.settings.get('pyrogram').get("in_memory_session", False)),
     ipv6=bool(
-        CONFIG.settings.get('pyrogram').get("use_ipv6", False))
+        CONFIG.settings.get('pyrogram').get("use_ipv6", False)),
+    mongodb = mongo_session
 )
+
 
 web = Quart(__name__, template_folder='../public')
 
