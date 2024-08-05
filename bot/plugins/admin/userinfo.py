@@ -17,8 +17,8 @@ async def user(client, message):
 **DC:** `{user.dc}`
 **First seen:** `{user.firstseen}`
 **Last seen:** `{user.lastseen}`
+**Warns:** `{user.warns}`
 **Banned:** `{user.is_banned}`
 **Subscription:** `{user.subscription}`
 '''
-
   await message.reply_text(text)

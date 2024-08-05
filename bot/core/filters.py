@@ -1,11 +1,13 @@
 import json
 
 from pyrogram import filters
-from pyrogram.errors import UserNotParticipant, ChatAdminRequired
 from pyrogram.enums import ChatType
+from pyrogram.errors import ChatAdminRequired, UserNotParticipant
+
+from ..core import antiflood, logger
 from ..core import database as db
 from ..core.shared import CONFIG
-from ..core import logger, antiflood
+
 
 async def user_check(_, c, msg):
   #if msg.chat.type:
@@ -14,7 +16,7 @@ async def user_check(_, c, msg):
   if not CONFIG.me:
     CONFIG.me = await c.get_me()
   
-  if not msg.chat.type == ChatType.PRIVATE:
+  if msg.chat.type != ChatType.PRIVATE:
     return False
   
   json_object = json.loads(f"{msg}")
@@ -29,13 +31,7 @@ async def user_check(_, c, msg):
   else:
     logger.warn(instance)
     return False
-  
-  if antiflood.is_flooding(userID):
-    logger.warning(f"User {userID} is flooding.")
-    return
 
-  
-  
   if userID == CONFIG.me.id:
     return False
   
@@ -47,13 +43,18 @@ async def user_check(_, c, msg):
     user.refresh(msg)
     if bool(user.is_banned):
       return True
+      
+  if antiflood and antiflood.is_flooding(userID):
+    user.warn()
+    antiflood.flush_user(userID)
+    return
   
   user_pass = False
   
 
-  if bool(CONFIG.settings["force_sub"]):
+  if bool(CONFIG.settings["user_check"]["force_sub"]):
+    chat = CONFIG.settings["user_check"]["force_sub"].get("chats")[0]
     try:
-      chat = CONFIG.settings["FORCE_SUB_CHANNEL"]
       await c.get_chat_member(chat, userID)
       user_pass = True
     

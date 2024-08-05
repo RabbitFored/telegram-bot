@@ -13,16 +13,12 @@ logging.basicConfig(
 # Initialize tgbot logger
 logger = logging.getLogger('tgbot')
 
-
 #set levels
 myloggers = CONFIG.settings["logging"]["loggers"]
-for name in logging.root.manager.loggerDict:
-    if myloggers.get(name, None):
-        level = myloggers[name].get("level","INFO")
+
+for col in myloggers:
+    names = col.split(",")
+    for name in names:
+        name = name.strip()
+        level = myloggers[col].get("level","INFO")
         logging.getLogger(name).setLevel(logging._nameToLevel[level.upper()])
-
-
-root_logger = logging.getLogger()
-level = myloggers["root"].get("level","INFO")
-root_logger.setLevel(logging._nameToLevel[level.upper()])
-

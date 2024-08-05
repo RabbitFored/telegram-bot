@@ -135,9 +135,16 @@ class USER:
 
    def unban(self):
       db.update_user(self.ID, {"$set": {"is_banned": False}})
-   
+
+   def clear_warns(self):
+      db.update_user(self.ID, {"$unset": {"warns": ""}})
    def warn(self):
-      db.update_user(self.ID, {"$inc": {"warns": 1}})
+      max_warn = 3
+      if self.warns > max_warn:
+         self.ban()
+         return
+      else:
+        db.update_user(self.ID, {"$inc": {"warns": 1}})
 
    def setStatus(self, status):
       db.update_user(self.ID, {"$set": {"status": status}})

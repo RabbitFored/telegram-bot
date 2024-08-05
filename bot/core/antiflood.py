@@ -1,5 +1,7 @@
 import time
+from .shared import CONFIG
 from collections import defaultdict, deque
+
 
 class AntiFlood:
     def __init__(self, max_messages, time_window):
@@ -21,7 +23,16 @@ class AntiFlood:
 
         # Record the new message time
         message_times.append(current_time)
+        print(message_times)
         return False
+    def flush_user(self, user_id):
+        """ Clears stored message times for a specific user. """
+        if user_id in self.user_messages:
+            del self.user_messages[user_id]
 
-# Singleton pattern for easy access
-antiflood = AntiFlood(5, 5)
+if CONFIG.settings["user_check"].get("antiflood", None):
+  message_interval = CONFIG.settings["user_check"]["antiflood"].get("message_interval",5)
+  message_count = CONFIG.settings["user_check"]["antiflood"].get("message_count",5)
+  antiflood = AntiFlood(message_count, message_interval)
+else:
+    antiflood = None

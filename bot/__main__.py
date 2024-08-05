@@ -26,7 +26,6 @@ async def user_check(client, message):
 
 
 if __name__ == "__main__":
-    
     if True:
         from . import web
         logger.info("Starting web client and bot")

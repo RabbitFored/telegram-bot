@@ -1,13 +1,9 @@
-app_name: bot
+app_name: tgbot
 app_version: 1.0.0
 
 pyrogram:
-  client_name: "bot"
   plugin_dir: "bot/plugins"
-  test_mode: false            #connect to test servers 
-  alt_port: true              #if true, port 5222 will be used to connect to Telegram.
-  in_memory_session: false    #defaults to true when using session_string
-  use_ipv6: false
+  alt_port: true 
   use_mongodb_for_session: true
 
 commands:
@@ -17,19 +13,15 @@ commands:
 translation:
    dir: "bot/translation"
    default_language: "en"
-   
+
 logging:
     loggers:
-        root:
-          level: "INFO"      #{'CRITICAL': 50, 'FATAL': 50, 'ERROR': 40, 'WARN': 30, 'WARNING': 30, 'INFO': 20, 'DEBUG': 10, 'NOTSET': 0}
+        root, tgbot:
+          level: "INFO"   
           handlers: ["telegram", "file"]
-        tgbot:
-          level: "INFO"
         pyrogram:
           level: "WARNING"
-        pyrogram.parser.html:
-          level: "ERROR"
-        pyrogram.session.session:
+        pyrogram.parser.html, pyrogram.session.session:
           level: "ERROR"
     handlers:
       telegram:
@@ -40,46 +32,45 @@ logging:
         path: "logs/bot.log"
         maxSize: "1 MB" 
         backupCount: 5
-    
-FORCE_SUB_CHANNEL: "@theostrich"
-
-force_sub: true
-web: true
-
-user_check:
-  force_sub: false
-  accept_tc: true
-  ban: true
 
 groups:
   admin: [1775541139, 1520625615, 1809735866]
   tester: [ 2023698054 ]
 
 subscriptions:
-  - name: "free"
-    data:
-      limits:
-        max_mails: 3  
-  - name: "premium"
-    data:
-      prices: 
-        - price: "100,xtr"
-          validity: "1,month"
-        - price: "200,xtr"
-          validity: "3,month"
+- name: "free"
+  data:
+    limits:
+      max_mails: 3  
+- name: "premium"
+  data:
+    prices: 
+      - price: "100,xtr"
+        validity: "1,month"
+      - price: "200,xtr"
+        validity: "3,month"
 
-      limits:
-        max_mails: 10
-        custom_domains: true
-        send: true
+    limits:
+      max_mails: 10
+      custom_domains: true
+      send: true
+      
+user_check:
+  accept_tc: true
+  ban: true
+  force_sub:
+      chats: 
+         - "@theostrich"
+  antiflood:
+      message_interval: 5
+      message_count: 5
+  exclude:
+   groups: ["admin"]
+   subscription: ["premium"]
 
 broadcast:
   users: all    #no. of users to send the message to
   mode: forward #available options: forward, copy
-
-
-MongoDB:
-  database: mailable
 
 links:
   channel_url: "t.me/theostrich"
@@ -89,3 +80,15 @@ links:
 
 extras:
   # add your own extras here
+
+
+  #if true, port 5222 will be used to connect to Telegram.
+  #  test_mode: false            #connect to test servers 
+  #  use_ipv6: false
+  #  in_memory_session: false    #defaults to true when using session_string
+  #  proxy:
+  #    scheme: socks5   # "socks4", "socks5" and "http" are supported
+  #    hostname: 11.22.33.44
+  #    port: 1234
+
+# {'CRITICAL': 50, 'FATAL': 50, 'ERROR': 40, 'WARN': 30, 'WARNING': 30, 'INFO': 20, 'DEBUG': 10, 'NOTSET': 0}
