@@ -138,6 +138,7 @@ class USER:
 
    def clear_warns(self):
       db.update_user(self.ID, {"$unset": {"warns": ""}})
+
    def warn(self):
       max_warn = 3
       if self.warns > max_warn:

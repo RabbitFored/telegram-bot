@@ -30,9 +30,9 @@ class AntiFlood:
         if user_id in self.user_messages:
             del self.user_messages[user_id]
 
-if CONFIG.settings["user_check"].get("antiflood", None):
-  message_interval = CONFIG.settings["user_check"]["antiflood"].get("message_interval",5)
-  message_count = CONFIG.settings["user_check"]["antiflood"].get("message_count",5)
+if CONFIG.settings["filters"].get("antiflood", None):
+  message_interval = CONFIG.settings["filters"]["antiflood"].get("message_interval",5)
+  message_count = CONFIG.settings["filters"]["antiflood"].get("message_count",5)
   antiflood = AntiFlood(message_count, message_interval)
 else:
     antiflood = None

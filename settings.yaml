@@ -16,19 +16,23 @@ translation:
 
 logging:
     loggers:
-        root, tgbot:
-          level: "INFO"   
+        root:
+          level: "INFO"
           handlers: ["telegram", "file"]
+        tgbot:
+          level: "INFO"
         pyrogram:
           level: "WARNING"
         pyrogram.parser.html, pyrogram.session.session:
           level: "ERROR"
     handlers:
       telegram:
+        level: "INFO"
         chat: -1002233681213
         thread: 2
         chunk: 4000
       file:
+        level: "DEBUG"
         path: "logs/bot.log"
         maxSize: "1 MB" 
         backupCount: 5
@@ -55,7 +59,7 @@ subscriptions:
       custom_domains: true
       send: true
       
-user_check:
+filters:
   accept_tc: true
   ban: true
   force_sub:
@@ -64,9 +68,12 @@ user_check:
   antiflood:
       message_interval: 5
       message_count: 5
-  exclude:
-   groups: ["admin"]
-   subscription: ["premium"]
+  disallow: #restrict these users from accessing bot
+     users: []
+     groups: []
+  exclude: #dont check for these users
+     groups: ["admin"]
+     subscriptions: ["premium"]
 
 broadcast:
   users: all    #no. of users to send the message to

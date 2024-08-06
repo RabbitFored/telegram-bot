@@ -32,18 +32,34 @@ async def user_check(_, c, msg):
     logger.warn(instance)
     return False
 
+  #allow self without filters
   if userID == CONFIG.me.id:
     return False
   
-  user = db.get_user(userID)
+  #allowed groups and subscribers
+  allowed_groups = CONFIG.settings["filters"]["exclude"].get("groups", [])
+  allowed_subscriptions = CONFIG.settings["filters"]["exclude"].get("subscriptions", [])
 
+  allowed_users = []
+  for group in allowed_groups:
+    allowed_users.extend(CONFIG.settings["groups"][group])
+    
+  if userID in allowed_users or user.subscription["name"]:
+    return False
+    
+  user = db.get_user(userID)
+  
   if not user:
     db.add_user(msg)
   else:
     user.refresh(msg)
     if bool(user.is_banned):
       return True
-      
+
+  if user.subscription["name"] in allowed_subscriptions:
+    return False
+
+  
   if antiflood and antiflood.is_flooding(userID):
     user.warn()
     antiflood.flush_user(userID)
@@ -52,8 +68,8 @@ async def user_check(_, c, msg):
   user_pass = False
   
 
-  if bool(CONFIG.settings["user_check"]["force_sub"]):
-    chat = CONFIG.settings["user_check"]["force_sub"].get("chats")[0]
+  if bool(CONFIG.settings["fliters"]["force_sub"]):
+    chat = CONFIG.settings["fliters"]["force_sub"].get("chats")[0]
     try:
       await c.get_chat_member(chat, userID)
       user_pass = True
