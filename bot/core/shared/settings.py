@@ -2,7 +2,7 @@ import os
 
 import yaml
 
-DEV = bool(os.environ.get('ENV', False)) and os.environ.get('ENV', False) != 'False'
+DEV = bool(os.environ.get('DEV', False)) and os.environ.get('DEV', False) != 'False'
 
 settings_path = 'settings-dev.yaml' if DEV else 'settings.yaml'
 

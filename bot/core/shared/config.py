@@ -2,11 +2,9 @@ import os
 
 import yaml
 from dotenv import load_dotenv
+from .settings import settings
 
 load_dotenv()
-
-settings_path = "settings.yaml"
-settings_file = open(settings_path, "r")
 
 
 class config:
@@ -19,7 +17,7 @@ class config:
     self.baseURL = os.environ.get("baseURL", "")
     self.port = int(os.environ.get("PORT", 5000))
     self.database = os.environ.get("DATABASE", "telegrambot")
-    self.settings = yaml.safe_load(settings_file)
+    self.settings = settings
     self.me = None
   def get_group(self,group):
     groups = self.settings["groups"]

@@ -80,7 +80,7 @@ def update_user_info(userID,newvalues):
   usercache.update_one(utils.make_filter(userID), newvalues )
 
 def fetch_all():
-  userdata = botdata.find({"status" : "active"}, {"_id": 0, 'user': 1 })
+  userdata = botdata.find({"status": {"$ne": "inactive"}}, {"_id": 0, 'user': 1 })
   object_ids = [ObjectId(user["user"]) for user in userdata]
   userinfo = usercache.find({"_id": {"$in": object_ids}} , {"_id": 0, "userid": 1})
   userIDs = [u["userid"] for u in userinfo]

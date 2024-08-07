@@ -39,7 +39,7 @@ async def bcast(mode, msg, process):
         except Exception as e:
             process.data["failed"]+= 1 
             logger.info(f"Error: {e}")
-
+        
 @Client.on_message(filters.command(["broadcast"]) & fltr.group("admin"))
 async def broadcast(client, message):
         processes = ProcessManager.list_processes()
