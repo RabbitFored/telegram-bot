@@ -44,7 +44,7 @@ async def user_check(_, c, msg):
   for group in allowed_groups:
     allowed_users.extend(CONFIG.settings["groups"][group])
     
-  if userID in allowed_users or user.subscription["name"]:
+  if userID in allowed_users:
     return False
     
   user = db.get_user(userID)
