@@ -53,7 +53,6 @@ subscriptions:
         validity: "1,month"
       - price: "200,xtr"
         validity: "3,month"
-
     limits:
       max_mails: 10
       custom_domains: true
