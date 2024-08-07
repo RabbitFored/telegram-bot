@@ -3,13 +3,13 @@ app_version: 1.0.0
 
 pyrogram:
   plugin_dir: "bot/plugins"
-  #alt_port: true 
-  #use_mongodb_for_session: true
+  alt_port: true 
+  use_mongodb_for_session: true
 
 commands:
    prefix: ["/", "."]
    case_sensitive: false
-   
+
 translation:
    dir: "bot/translation"
    default_language: "en"
@@ -58,7 +58,7 @@ subscriptions:
       max_mails: 10
       custom_domains: true
       send: true
-      
+
 filters:
   accept_tc: true
   ban: true
@@ -86,3 +86,16 @@ links:
   repo_url: "https://github.com/RabbitFored/mailable"
 
 extras:
+  # add your own extras here
+
+
+  #if true, port 5222 will be used to connect to Telegram.
+  #  test_mode: false            #connect to test servers 
+  #  use_ipv6: false
+  #  in_memory_session: false    #defaults to true when using session_string
+  #  proxy:
+  #    scheme: socks5   # "socks4", "socks5" and "http" are supported
+  #    hostname: 11.22.33.44
+  #    port: 1234
+
+# {'CRITICAL': 50, 'FATAL': 50, 'ERROR': 40, 'WARN': 30, 'WARNING': 30, 'INFO': 20, 'DEBUG': 10, 'NOTSET': 0}

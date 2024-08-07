@@ -1,8 +1,12 @@
+import os
+
 import yaml
 
-settings_path = "settings.yaml"
+DEV = bool(os.environ.get('ENV', False)) and os.environ.get('ENV', False) != 'False'
 
-settings_file = open(settings_path, "r")
-settings = yaml.safe_load(settings_file)
+settings_path = 'settings-dev.yaml' if DEV else 'settings.yaml'
+
+with open(settings_path, "r") as settings_file:
+  settings = yaml.safe_load(settings_file)
 
 #TODO
