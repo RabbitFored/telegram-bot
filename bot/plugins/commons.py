@@ -69,22 +69,3 @@ async def donate(client, message):
                              reply_markup=keyboard,
                              quote=True,
                              disable_web_page_preview=True)
-
-
-@Client.on_message(filters.command(["me"]))
-async def user_info(client, message):
-    user = db.get_user(message.from_user.id)
-
-    text = f'''
-**ID:** {user.ID}
-**User:** {user.name}
-**Username:** @{user.username}
-**First seen:** `{user.firstseen}`
-**Last seen:** `{user.lastseen}`
-'''
-    data = f'''
-**Mails:** `{user.data.get("mails", "")}`
-**Blocks:** `{user.data.get("blocks", "")}`
-   '''
-    text += data
-    await message.reply_text(text)

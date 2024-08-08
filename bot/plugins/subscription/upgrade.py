@@ -22,7 +22,6 @@ async def premium(client, message):
 
 @Client.on_message(filters.command(["upgrade"]))
 async def upgrade(client, message):
-
   await client.send_invoice(
     message.chat.id,
     title="Subscribe | Monthly",

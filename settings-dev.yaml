@@ -71,8 +71,8 @@ filters:
      users: []
      groups: []
   exclude: #dont check for these users
-     groups: ["admin"]
-     subscriptions: ["premium"]
+     groups: []
+     subscriptions: []
 
 broadcast:
   users: all    #no. of users to send the message to

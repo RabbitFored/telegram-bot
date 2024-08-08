@@ -9,20 +9,20 @@ import os
 #check users in banlist and forcesub
 @bot.on_message(fltr.user_filter)
 async def user_check(client, message):
+     pass
+    #channel_url = CONFIG.settings["links"]["channel_url"]
 
-    channel_url = CONFIG.settings["links"]["channel_url"]
+    #text = strings.get("force_sub_txt",
+    #                   channel=f"@{channel_url.split('/')[-1]}")
+    #keyboard = generate_keyboard(
+    #    strings.get("force_sub_btn", channel_url=channel_url))
 
-    text = strings.get("force_sub_txt",
-                       channel=f"@{channel_url.split('/')[-1]}")
-    keyboard = generate_keyboard(
-        strings.get("force_sub_btn", channel_url=channel_url))
-
-    await message.reply_text(
-        text,
-        disable_web_page_preview=True,
-        reply_markup=keyboard,
-        quote=True,
-    )
+    #await message.reply_text(
+    #    text,
+    #    disable_web_page_preview=True,
+    #    reply_markup=keyboard,
+    #    quote=True,
+    #)
 
 
 if __name__ == "__main__":
