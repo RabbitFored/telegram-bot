@@ -24,7 +24,7 @@ async def user_check(_, c, msg):
   instance = json_object["_"]
 
   if instance == "Message":
-    userID = msg.chat.id
+    userID = msg.from_user.id
   elif instance == "CallbackQuery":
     userID = msg.message.chat.id
   elif instance == "InlineQuery":
