@@ -50,6 +50,8 @@ def generate_user(userinfo, userdata):
      "firstseen": userdata['firstseen'],
      "lastseen": userdata['lastseen']
    }
+   if data["subscription"] == {}:
+     data["subscription"]  = {"name": "free"}
    return USER(data)
 
 def chunkstring(string, length):

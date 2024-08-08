@@ -55,11 +55,10 @@ async def user_check(_, c, msg):
     user.refresh(msg)
     if bool(user.is_banned):
       return True
-
-  if user.subscription["name"] in allowed_subscriptions:
+  
+  if user and user.subscription.get("name", "free") in allowed_subscriptions:
     return False
 
-  
   if antiflood and antiflood.is_flooding(userID):
     user.warn()
     antiflood.flush_user(userID)
@@ -68,8 +67,8 @@ async def user_check(_, c, msg):
   user_pass = False
   
 
-  if bool(CONFIG.settings["fliters"]["force_sub"]):
-    chat = CONFIG.settings["fliters"]["force_sub"].get("chats")[0]
+  if bool(CONFIG.settings["filters"]["force_sub"]):
+    chat = CONFIG.settings["filters"]["force_sub"].get("chats")[0]
     try:
       await c.get_chat_member(chat, userID)
       user_pass = True

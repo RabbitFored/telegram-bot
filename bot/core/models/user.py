@@ -62,9 +62,20 @@ class USER:
                   "subscription.transaction_id": transaction_id,
               }
           })
-
+   def gift(self,plan, byUSER):
+      db.update_user(
+          self.ID, {
+              "$set": {
+                  "subscription.name": plan,
+                  "subscription.subscription_date": datetime.now(),
+                  "subscription.expiry_date":
+                  datetime.now() + timedelta(days=30),
+                  #"subscription.transaction_id": transaction_id,
+                 "subscription.gift_by" : byUSER
+              }
+          })
    def remove_subscription(self, userID):
-      db.update_user(userID, {"$set": {"subscription": {}}})
+      db.update_user(userID, {"$unset": {"subscription": ""}})
 
    def refresh(self, msg):
       pre_user = db.get_user(msg.from_user.id)
@@ -134,7 +145,7 @@ class USER:
       db.update_user(self.ID, {"$set": {"is_banned": True}})
 
    def unban(self):
-      db.update_user(self.ID, {"$set": {"is_banned": False}})
+      db.update_user(self.ID, {"$unset": {"is_banned": ""}})
 
    def clear_warns(self):
       db.update_user(self.ID, {"$unset": {"warns": ""}})
