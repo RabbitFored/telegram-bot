@@ -1,7 +1,9 @@
 from pyrogram import Client, filters
-from bot.core import utils
+
 from bot.core import database as db
 from bot.core import filters as fltr
+from bot.core import utils
+
 
 @Client.on_message(filters.command(["ban"])  & fltr.group("admin") )
 async def ban(client, message):
@@ -9,8 +11,8 @@ async def ban(client, message):
   if not userID:
     await message.reply_text("**No user found!**")
     return
-  user = db.get_user(userID)
-  user.ban()
+  user = await db.get_user(userID)
+  await user.ban()
   await message.reply_text(f"Banned {userID}")
 
 @Client.on_message(filters.command(["unban"])  & fltr.group("admin") )
@@ -19,8 +21,8 @@ async def unban(client, message):
   if not userID:
     await message.reply_text("**No user found!**")
     return
-  user = db.get_user(userID)
-  user.unban()
+  user = await db.get_user(userID)
+  await user.unban()
   await message.reply_text(f"Unbanned {userID}")
 
 @Client.on_message(filters.command(["clear_warns"])  & fltr.group("admin") )
@@ -29,6 +31,6 @@ async def clear_warns(client, message):
   if not userID:
     await message.reply_text("**No user found!**")
     return
-  user = db.get_user(userID)
-  user.clear_warns()
+  user = await db.get_user(userID)
+  await user.clear_warns()
   await message.reply_text(f"Cleared all warnings for {userID}")

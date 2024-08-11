@@ -1,9 +1,11 @@
-from pyrogram import Client, filters
-from bot.core import filters as fltr
-from bot import logger
 import logging
 import os
+
+from pyrogram import Client, filters
 from pyrogram.types import InputMediaDocument
+
+from bot import logger
+from bot.core import filters as fltr
 
 
 @Client.on_message(filters.command("set_loglevel") & fltr.group("admin"))
@@ -19,10 +21,11 @@ async def set_log_level(client, message):
 
 @Client.on_message(filters.command(["logs", "get_logs"]) & fltr.group("admin"))
 async def get_logs(client, message):
-    LOG_DIR = 'logs'
+    LOG_DIR = "logs"
     log_files = [
         InputMediaDocument(os.path.join(LOG_DIR, f))
-        for f in sorted(os.listdir(LOG_DIR)) if f.startswith("bot.log")
+        for f in sorted(os.listdir(LOG_DIR))
+        if f.startswith("bot.log")
     ]
 
     if not log_files:

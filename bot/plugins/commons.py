@@ -1,8 +1,8 @@
 from pyrogram import Client, filters
-from pyrogram.raw.types import channel
-from bot import strings, CONFIG
+
+from bot import CONFIG, strings
+from bot.core import filters as fltr
 from bot.core.utils import generate_keyboard
-from bot.core import database as db, filters as fltr
 
 
 @Client.on_message(fltr.cmd(["start"]))

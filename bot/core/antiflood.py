@@ -1,6 +1,7 @@
 import time
-from .shared import CONFIG
 from collections import defaultdict, deque
+
+from .shared import CONFIG
 
 
 class AntiFlood:
@@ -23,7 +24,6 @@ class AntiFlood:
 
         # Record the new message time
         message_times.append(current_time)
-        print(message_times)
         return False
     def flush_user(self, user_id):
         """ Clears stored message times for a specific user. """

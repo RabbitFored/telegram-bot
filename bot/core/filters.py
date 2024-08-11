@@ -7,46 +7,36 @@ from ..core.utils import generate_keyboard
 from ..core import antiflood, logger
 from ..core import database as db
 from ..core.shared import CONFIG
-
+import time
 
 async def user_check(_, c, msg):
+  
   #if msg.chat.type: TODO
-
-  #set self
-  if not CONFIG.me:
-    CONFIG.me = await c.get_me()
 
   #make checks only for private chats
   if msg.chat.type != ChatType.PRIVATE:
     return False
 
-  json_object = json.loads(f"{msg}")
-  instance = json_object["_"]
+  userID = msg.from_user.id
 
-  if instance == "Message":
-    userID = msg.from_user.id
-  elif instance == "CallbackQuery":
-    userID = msg.message.chat.id
-  elif instance == "InlineQuery":
-    userID = msg.from_user.id
-  else:
-    logger.warn(instance)
-    return False
-
-  #allow self without filters
+  
+  
+  #allow self
   if userID == CONFIG.me.id:
     return False
 
-  user = db.get_user(userID)
-
+  start = time.time()
+  
+  user = await db.get_user(userID)
+  
   #add new user to db
   if not user:
-    db.add_user(msg)
+    await db.add_user(msg)
   else:
-    user.refresh(msg)
     if bool(user.is_banned):
       return await msg.reply("You are banned from using this bot.")
-
+    await user.refresh(msg)
+  
   #allowed groups and subscribers
   allowed_groups = CONFIG.settings["filters"]["exclude"].get("groups", [])
   allowed_subscriptions = CONFIG.settings["filters"]["exclude"].get(
@@ -64,7 +54,7 @@ async def user_check(_, c, msg):
 
   #warn flooding users
   if antiflood and antiflood.is_flooding(userID):
-    user.warn()
+    await user.warn()
     antiflood.flush_user(userID)
     return await msg.reply(
         "You are flooding me, slow down!\n\nFlooding may cause your account to be banned."

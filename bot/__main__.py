@@ -4,11 +4,12 @@ from bot.core.utils import generate_keyboard
 from bot import strings
 from pyrogram import filters
 import os
-
-
+import time
+import asyncio
 #check users in banlist and forcesub
 @bot.on_message(fltr.user_filter)
 async def user_check(client, message):
+     #print(time.time())
      pass
     #channel_url = CONFIG.settings["links"]["channel_url"]
 
@@ -30,6 +31,10 @@ if __name__ == "__main__":
         from . import web
         logger.info("Starting web client and bot")
         bot.start()
+        
+        #set self
+        CONFIG.me = bot.get_me()
+
         web.run("0.0.0.0", CONFIG.port, loop=bot.loop)
     else:
         logger.info("Starting bot")

@@ -4,11 +4,11 @@ from .. import utils
 from datetime import datetime, timedelta
 
 
-def get_user(userID):
-  userinfo = usercache.find_one(utils.make_filter(userID))
+async def get_user(userID):
+  userinfo = await usercache.find_one(utils.make_filter(userID))
   if userinfo:
     objInstance = ObjectId(userinfo["_id"])
-    userdata = botdata.find_one({"user": objInstance})
+    userdata = await botdata.find_one({"user": objInstance})
     if userdata:
       user = utils.generate_user(userinfo, userdata)
       return user
@@ -17,7 +17,7 @@ def get_user(userID):
   else:
     return None
 
-def init_userinfo(msg):
+async def init_userinfo(msg):
   userID = msg.from_user.id
   username = msg.from_user.username
   firstname = msg.from_user.first_name
@@ -36,10 +36,10 @@ def init_userinfo(msg):
     "firstseen": now,
     "lastseen": now
   }
-  r = usercache.insert_one(userinfo)
+  r = await usercache.insert_one(userinfo)
   return r
 
-def init_userdata(userObjectID, now):
+async def init_userdata(userObjectID, now):
   userdata = {
     "user": userObjectID,
   #  "status": "active",
@@ -53,13 +53,13 @@ def init_userdata(userObjectID, now):
     "firstseen": now,
     "lastseen": now
   }
-  r = botdata.insert_one(userdata)
+  r = await botdata.insert_one(userdata)
   return r
   
-def add_user(msg):
+async def add_user(msg):
   userID = msg.from_user.id
   try:
-    userinfo = usercache.find_one(utils.make_filter(userID))
+    userinfo = await usercache.find_one(utils.make_filter(userID))
   except:
     userinfo = None
 
@@ -71,64 +71,64 @@ def add_user(msg):
   init_userdata(userObjectID, msg.date)
   return True
 
-def update_user(userID, newvalues):
-  userinfo = usercache.find_one(utils.make_filter(userID))
+async def update_user(userID, newvalues):
+  userinfo = await usercache.find_one(utils.make_filter(userID))
   filter = {'user': ObjectId(userinfo['_id'])}
-  botdata.update_one(filter, newvalues)
+  await botdata.update_one(filter, newvalues)
 
-def update_user_info(userID,newvalues):
-  usercache.update_one(utils.make_filter(userID), newvalues )
+async def update_user_info(userID,newvalues):
+  await usercache.update_one(utils.make_filter(userID), newvalues )
 
-def fetch_all():
-  userdata = botdata.find({"status": {"$ne": "inactive"}}, {"_id": 0, 'user': 1 })
+async def fetch_all():
+  userdata = await botdata.find({"status": {"$ne": "inactive"}}, {"_id": 0, 'user': 1 })
   object_ids = [ObjectId(user["user"]) for user in userdata]
-  userinfo = usercache.find({"_id": {"$in": object_ids}} , {"_id": 0, "userid": 1})
+  userinfo = await usercache.find({"_id": {"$in": object_ids}} , {"_id": 0, "userid": 1})
   userIDs = [u["userid"] for u in userinfo]
   return userIDs
 
-def data_exists(data):
+async def data_exists(data):
   query = {f'data.{key}': value for key, value in data.items()}
-  cursor = list(botdata.find(query))
+  cursor = list((await botdata.find(query)))
   return bool(cursor)
 
-def find_data(data):
+async def find_data(data):
   query = {f'data.{key}': value for key, value in data.items()}
-  userdata = botdata.find_one(query)
+  userdata = await botdata.find_one(query)
   if userdata:
-      userinfo = usercache.find_one({'_id': ObjectId(userdata['user'])})
+      userinfo = await usercache.find_one({'_id': ObjectId(userdata['user'])})
       user = utils.generate_user(userinfo, userdata)
       return user
   else:
       return None
 
-def update_user_data(userID, method, data):
+async def update_user_data(userID, method, data):
   d = {f'data.{key}': value for key, value in data.items()}
   update_user(userID, { method :  d })
 
-def delete_user(userID):
+async def delete_user(userID):
   filter = utils.make_filter(userID)
-  userinfo = usercache.find_one(filter)
+  userinfo = await usercache.find_one(filter)
   if userinfo:
     objInstance = ObjectId(userinfo["_id"])
-    botdata.delete_one({"user": objInstance})
-    usercache.delete_one(filter)
+    await botdata.delete_one({"user": objInstance})
+    await usercache.delete_one(filter)
     return True
   else:
     return False
 
-def statial(what,how):
+async def statial(what,how):
   collection = bot_db["statial"]
-  collection.update_one( {}, {"$inc": { what : how }} )
+  await collection.update_one( {}, {"$inc": { what : how }} )
   return "ok"
 
-def get_statial():
+async def get_statial():
   collection = bot_db["statial"]
-  value = collection.find_one()
+  value = await collection.find_one()
   return value
 
-def get_active_users():
-  total_users = botdata.count_documents({})
-  active_users = botdata.count_documents({
+async def get_active_users():
+  total_users = await botdata.count_documents({})
+  active_users = await botdata.count_documents({
       'lastseen': {'$gte': datetime.now() - timedelta(days=7)}
   })
 

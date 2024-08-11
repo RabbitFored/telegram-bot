@@ -64,9 +64,9 @@ filters:
   force_sub:
       chats: 
          - "@theostrich"
-  antiflood:
-      message_interval: 5
-      message_count: 5
+  #antiflood:
+  #    message_interval: 5
+  #    message_count: 5
   disallow: #restrict these users from accessing bot
      users: []
      groups: []
