@@ -8,7 +8,8 @@ def strip_script_tags(page):
     pattern2 = re.compile(r'<script[\s\S]+?/script>')
     result = re.sub(pattern2, "", result)
     return result
-  
+
+
 def make_filter(userID):
   if isinstance(userID, str) and userID.startswith("@"):
     filter = {"username": userID[1:]}
@@ -16,7 +17,6 @@ def make_filter(userID):
     filter = {'userid': int(userID)}
   else:
     filter = {'userid': userID}
-
   return filter
 
 def get_user(message):

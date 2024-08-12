@@ -25,9 +25,11 @@ async def user_check(_, c, msg):
   if userID == CONFIG.me.id:
     return False
 
-  start = time.time()
   
+
+  start = time.time()
   user = await db.get_user(userID)
+  print(time.time() - start)
   
   #add new user to db
   if not user:
@@ -36,6 +38,7 @@ async def user_check(_, c, msg):
     if bool(user.is_banned):
       return await msg.reply("You are banned from using this bot.")
     await user.refresh(msg)
+    
   
   #allowed groups and subscribers
   allowed_groups = CONFIG.settings["filters"]["exclude"].get("groups", [])

@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from os import pread
+from os import pread, uname
 from ...core import database as db
 from ..shared import CONFIG
 import requests
@@ -78,13 +78,13 @@ class USER:
       await db.update_user(userID, {"$unset": {"subscription": ""}})
 
    async def refresh(self, msg):
-      start = time.time()
-
-      now = msg.date
+      
       #update lasteen
-      newValues = {'lastseen': msg.date}
-      await db.update_user(msg.from_user.id, {"$set": newValues})
-      await db.update_user_info(msg.from_user.id, {"$set": newValues})
+      lastseen = msg.date
+      await db.update_lastseen(self.ID, lastseen)
+      
+      #await db.update_user(msg.from_user.id, {"$set": newValues})
+      #await db.update_user_info(msg.from_user.id, {"$set": newValues})
 
       #make user active
       if self.status == "inactive":
@@ -139,7 +139,6 @@ class USER:
                
                r = requests.post(f"https://api.telegram.org/bot{CONFIG.botTOKEN}/sendMessage", 
                                  json=data)
-      print(time.time() - start)
       
 
    async def ban(self):

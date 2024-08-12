@@ -2,15 +2,21 @@ from . import usercache, botdata, bot_db
 from bson.objectid import ObjectId
 from .. import utils
 from datetime import datetime, timedelta
+from cachetools import TTLCache
 
+user_cache = TTLCache(maxsize=1000, ttl=60) 
 
 async def get_user(userID):
+  if userID in user_cache:
+    return user_cache[userID]
+    
   userinfo = await usercache.find_one(utils.make_filter(userID))
   if userinfo:
     objInstance = ObjectId(userinfo["_id"])
     userdata = await botdata.find_one({"user": objInstance})
     if userdata:
       user = utils.generate_user(userinfo, userdata)
+      user_cache[userID] = user
       return user
     else:
       return None
@@ -71,10 +77,21 @@ async def add_user(msg):
   init_userdata(userObjectID, msg.date)
   return True
 
+async def update_last_seen(userID, lastseen):
+  newvalues = {"$set": {"lastseen": lastseen}}
+  
+  userinfo = await usercache.find_one(utils.make_filter(userID))
+  
+  filter = {'user': ObjectId(userinfo['_id'])}
+  await botdata.update_one(filter, newvalues)
+  
 async def update_user(userID, newvalues):
   userinfo = await usercache.find_one(utils.make_filter(userID))
   filter = {'user': ObjectId(userinfo['_id'])}
   await botdata.update_one(filter, newvalues)
+  
+  if userID in user_cache:
+    del user_cache[userID]
 
 async def update_user_info(userID,newvalues):
   await usercache.update_one(utils.make_filter(userID), newvalues )
