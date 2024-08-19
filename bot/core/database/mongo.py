@@ -192,7 +192,7 @@ class MongoDB(BaseDatabase):
     await self.statial.update_one({}, {"$inc": {what: how}})
     return True
 
-  async def update_user(self, userID, userinfo=None, userdata=None):
+  async def update_user(self, userID, userinfo=None, userdata=None, dmode="$set"):
 
     filter = {"userid": userID}
 
@@ -227,14 +227,27 @@ class MongoDB(BaseDatabase):
             })
         userinfo.pop("name")
 
-    await self.userinfo.update_one(filter, {"$set": userinfo})
+      await self.userinfo.update_one(filter, {"$set": userinfo})
 
     if userdata:
+      to_pop = []
       for key, value in userdata.items():
         if value == "":
           await self.userdata.update_one(filter, {"$unset": {key: ""}})
-          userdata.pop(key)
-
+          to_pop.append(key)
+        if key == "data":
+          data = {}
+          for subkey, subvalue in value.items():
+            if subvalue == "":
+              await self.userdata.update_one(filter, {"$unset": {key: ""}})
+            else:
+              data[f'data.{subkey}'] = subvalue
+          await self.userdata.update_one(filter, {dmode: data})
+          to_pop.append(key)
+    
+      for key in to_pop:
+        userdata.pop(key, None) 
+        
       await self.userdata.update_one(filter, {"$set": userdata})
 
       if userID in self.cache:

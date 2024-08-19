@@ -12,13 +12,13 @@ class Data(dict):
       self.userID = userID
 
    async def addToSet(self, value):
-      await db.update_user_data(self.userID, "$addToSet", value)
+      await db.update_user(userID=self.userID, userdata={"data" : value},dmode="$addToSet")
 
    async def set(self, value):
-      await db.update_user_data(self.userID, "$set", value)
+      await db.update_user(userID=self.userID, userdata={"data" : value})
 
    async def rm(self, value):
-      await db.update_user_data(self.userID, "$pull", value)
+      await db.update_user(userID=self.userID, userdata={"data" : value}, dmode="$pull")
 
 
 class USER:
@@ -41,15 +41,6 @@ class USER:
       for subscription in subscriptions:
          if subscription["name"] == self.subscription['name']:
             return subscription["data"]["limits"]
-
-   async def add_data(self, data):
-      await db.update_user_data(self.ID, "$addToSet", data)
-
-   async def set_data(self, data):
-      await db.update_user_data(self.ID, "$set", data)
-
-   async def rm_data(self, data):
-      await db.update_user_data(self.ID, "$pull", data)
 
    async def upgrade(self, plan, transaction_id):
       userdata = {
