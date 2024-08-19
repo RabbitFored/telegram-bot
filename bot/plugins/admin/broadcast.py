@@ -19,7 +19,7 @@ async def bcast(mode, msg, process):
     process.data["x"] = 0
     process.data["failed"] = 0
     
-    users = db.fetch_all()
+    users = await db.fetch_all_users()
     process.data["total"] = len(users)
     for user in users:
         try:
@@ -38,7 +38,7 @@ async def bcast(mode, msg, process):
             dser.setStatus("inactive")
         except InputUserDeactivated:
             process.data["failed"]+= 1 
-            db.delete_user(user)
+            await db.delete_user(user)
             logger.info(f"removed deactivated user {user} from db")
         except PeerIdInvalid:
             logger.info(f"{user} : user id invalid\n")

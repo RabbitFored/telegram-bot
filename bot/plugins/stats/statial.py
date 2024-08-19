@@ -20,19 +20,12 @@ def create_statistics_graph(stats):
           """
 
 
-@Client.on_message(filters.command(["statial"]) & fltr.group("admin"))
+@Client.on_message(filters.command(["stats"]) & fltr.group("admin"))
 async def statial(client, message):
     # stats = db.get_active_users()
     # create_statistics_graph(stats)
 
-    stat = await db.get_statial()
-    users = await db.get_active_users()
+    stats = await db.get_stats()
 
-    text = "**Statial**\n"
-    text += f"**Total Users:** {users['total_users']}\n"
-    text += f"**Active Users:** {users['active_users']}\n"
-    if stat:
-        for i in stat:
-            if i != "_id":
-                text += f"**{i}:** {stat[i]}\n"
+    text = "**Statial**\n\n{stats}"
     await message.reply_text(text)

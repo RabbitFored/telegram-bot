@@ -7,11 +7,13 @@ from bot.core import utils
 
 @Client.on_message(filters.command(["user"]) & fltr.group("admin"))
 async def user(client, message):
-    user = await db.get_user(utils.get_user(message))
-
+    userID, username = utils.get_target_user(message)
+    user = await db.get_user(userID, username, fetch_info=True)
+    
     if not user:
         await message.reply_text("**No user found!**")
         return
+    
     text = f"""
 **User:** {user.name}
 **ID:** {user.ID}

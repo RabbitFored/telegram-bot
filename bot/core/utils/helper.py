@@ -28,11 +28,29 @@ def get_user(message):
   elif message.reply_to_message:
     if message.reply_to_message.forward_from:
       userID = message.reply_to_message.forward_from.id
-
       return userID
   else:
     return None
 
+def get_target_user(message):
+  userID = None
+  username = None
+  
+  args = message.text.split(" ")
+  
+  if len(args) > 1:
+    t = args[1]
+    if t.isdigit():
+      userID = int(t)
+    else:
+      username = t[1:] if t[0] == '@' else t
+  elif message.reply_to_message:
+    if message.reply_to_message.forward_from:
+      userID = message.reply_to_message.forward_from.id
+  else:
+    pass
+  
+  return userID, username
 
 def generate_user(userinfo, userdata):
    data = {

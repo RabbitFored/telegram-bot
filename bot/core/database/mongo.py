@@ -59,17 +59,27 @@ class MongoDB(BaseDatabase):
       await self.userdata.insert_one(udata)
     return True
 
-  async def get_user(self, userID, fetch_info=False):
-    if (userID in self.cache) and ((not fetch_info) or (self.cache[userID]["fetch_info"])):
-        return self.cache[userID]["user"]
+  async def get_user(self, userID=None, username=None, fetch_info=False):
     
-
+    key = userID or username
+    
+    if key and (key in self.cache) and ((not fetch_info) or (self.cache[key]["fetch_info"])):
+        return self.cache[key]["user"]
+    
     userdata = None
     userinfo = None
 
-    userdata = await self.userdata.find_one({"userid": userID})
-    if fetch_info:
-      userinfo = await self.userinfo.find_one({"userid": userID})
+    if userID:
+      userdata = await self.userdata.find_one({"userid": userID})
+      if fetch_info:
+        userinfo = await self.userinfo.find_one({"userid": userID})
+    elif username:
+      userinfo = await self.userinfo.find_one({"username": username})
+      if userinfo:
+        userdata = await self.userdata.find_one({"userid": userinfo["userid"]})
+    else:
+      return False
+    
     if userdata:
       data = {}
       data["userid"] = userdata.get("userid")
@@ -85,7 +95,7 @@ class MongoDB(BaseDatabase):
         data["username"] = userinfo['username'][-1] if userinfo[
             'username'] else ""
         data["dc"] = userinfo['dc']
-        data["name"] = userinfo['name'][-1] if userinfo['name'] else "",
+        data["name"] = userinfo['name'][-1] if userinfo['name'] else ""
         data["is_banned"] = bool(userinfo.get("is_banned", False)) or bool(
             userdata.get("is_banned", False))
       user = utils.gen_user(data)
@@ -96,29 +106,22 @@ class MongoDB(BaseDatabase):
     else:
       return None
 
-  async def find_user(self, username=None, data=None, fetch_info=False):
+  async def find_user(self, data, fetch_info=False):
     #if (userID in self.cache) and ((not fetch_info) or (self.cache[userID]["fetch_info"])):
     #  return self.cache[userID]["user"]
     userinfo = None
     userdata = None
 
-    if username:
-      userinfo = await self.userinfo.find_one({"username": username})
-      if userinfo:
-        userdata = await self.userinfo.find_one({"userid": userinfo['userid']})
-    elif data:
-      userdata = await self.userdata.find_one({
+    userdata = await self.userdata.find_one({
           f'data.{key}': value
           for key, value in data.items()
       })
-      if userdata:
-        if fetch_info:
+    if userdata and fetch_info:
           userinfo = await self.userinfo.find_one(
               {"userid": userdata['userid']})
-      else:
-        return False
     else:
-      return False
+        return False
+
 
     if userdata:
       data = {}
@@ -150,6 +153,18 @@ class MongoDB(BaseDatabase):
     else:
       return None
 
+  async def fetch_all_users(self):
+    userIDs = []
+    cursor = self.userdata.find({"status": {"$ne": "inactive"}}, {"_id": 0, 'userid': 1 })
+    
+    try:
+      async for document in cursor:
+        if document.get("userid", None):
+         userIDs.append(document["userid"])
+    except Exception as e:
+      logger.error(f"An error occurred while fetching users: {e}")
+    return userIDs
+    
   async def get_stats(self):
     stats = {}
 
@@ -170,7 +185,7 @@ class MongoDB(BaseDatabase):
 
   async def data_exists(self, data):
     query = {f'data.{key}': value for key, value in data.items()}
-    cursor = list((await self.userdata.find(query)))
+    cursor = list((await self.userdata.find_one(query)))
     return bool(cursor)
 
   async def inc_stat(self, what, how):

@@ -8,11 +8,13 @@ from bot.core import utils
 
 @Client.on_message(filters.command(["gift"]) & fltr.group("admin"))
 async def gift(client, message):
-    userID = utils.get_user(message)
-    if not userID:
+    userID, username = utils.get_target_user(message)
+    user = await db.get_user(userID, username, fetch_info=True)
+
+    if not user:
         await message.reply_text("**No user found!**")
         return
-    user = await db.get_user(userID)
+
     await user.gift("premium", message.from_user.id)
     await client.send_message(
         chat_id=user.ID,

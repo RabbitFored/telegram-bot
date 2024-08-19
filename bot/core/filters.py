@@ -27,9 +27,7 @@ async def user_check(_, c, msg):
 
   
 
-  start = time.time()
   user = await db.get_user(userID)
-  print(time.time() - start)
   
   #add new user to db
   if not user:

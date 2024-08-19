@@ -3,10 +3,12 @@ import importlib
 from os.path import basename, dirname, isfile
 
 from .mongo import MongoDB
+from .redis import Redis
 from ..shared import CONFIG
 
 db = MongoDB(CONFIG.mongouri)
 
+#db = Redis("test")
 #def list_all_modules():
     # This generates a list of modules in this folder
 #    mod_paths = glob.glob(dirname(__file__) + "/*.py")
