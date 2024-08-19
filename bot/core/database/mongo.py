@@ -195,7 +195,7 @@ class MongoDB(BaseDatabase):
   async def update_user(self, userID, userinfo=None, userdata=None, dmode="$set"):
 
     filter = {"userid": userID}
-
+    
     if userinfo:
       username = userinfo.get("username", None)
       name = userinfo.get("name", None)
@@ -226,10 +226,14 @@ class MongoDB(BaseDatabase):
                 }
             })
         userinfo.pop("name")
-
       await self.userinfo.update_one(filter, {"$set": userinfo})
 
     if userdata:
+      no_recache = ["lastseen"]
+      
+      if len(set(userdata.keys()) - set(no_recache)) > 0 and userID in self.cache:
+        del self.cache[userID]
+        
       to_pop = []
       for key, value in userdata.items():
         if value == "":
@@ -244,14 +248,11 @@ class MongoDB(BaseDatabase):
               data[f'data.{subkey}'] = subvalue
           await self.userdata.update_one(filter, {dmode: data})
           to_pop.append(key)
-    
+          
       for key in to_pop:
         userdata.pop(key, None) 
-        
+    
       await self.userdata.update_one(filter, {"$set": userdata})
-
-      if userID in self.cache:
-        del self.cache[userID]
 
   async def delete_user(self, userID, clear_info=False):
     if clear_info:

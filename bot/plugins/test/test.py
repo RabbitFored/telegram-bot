@@ -54,7 +54,7 @@ async def test(client, message):
 @Client.on_message(filters.command(["test"]))
 async def test(client, message):
     user = await db.get_user(message.from_user.id)
-    await user.data.set({"jjk": "kk1"})
+    await user.data.set({"jjdk": "kkf1"})
     await message.reply(f"t {str((await db.list_database()))}")
     
 @Client.on_message(filters.command(["test2"]))

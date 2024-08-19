@@ -67,7 +67,6 @@ class USER:
       await db.update_user(userID, userdata=userdata)
 
    async def refresh(self, msg):
-
       userinfo = {}
       userdata = {}
       
@@ -94,7 +93,7 @@ class USER:
       name = firstname + lastname
       if self.name != name:
          userinfo["name"] = name
-         
+      await db.update_user(self.ID, userinfo, userdata)
       if self.subscription:
          if not self.subscription["name"] == "free":
             if now > self.subscription['expiry_date']:
