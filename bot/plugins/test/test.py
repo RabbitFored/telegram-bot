@@ -2,10 +2,11 @@ from pyrogram import Client, filters
 from bot.core import database as db
 from bot.core.translation import Translator
 from bot.core.utils import generate_keyboard
-from bot import logger
+from bot import logger, CONFIG
 from bot.core.utils import generate_keyboard, gen_rand_string
 from datetime import datetime, timedelta
 import time
+from bot.core.database import MongoDB
 '''
 def read_and_modify_one_block_of_yaml_data(filename, key, value):
     with open(f'{filename}.yaml', 'r') as f:
@@ -52,9 +53,7 @@ async def test(client, message):
 
 @Client.on_message(filters.command(["test"]))
 async def test(client, message):
-    t = await message.reply("test")
-    c = datetime.timestamp(t.date) - datetime.timestamp(message.date)
-    await message.reply(f"{c}")
+    await message.reply(f"t {str((await db.list_database()))}")
     
 @Client.on_message(filters.command(["test2"]))
 async def test2(client, message):

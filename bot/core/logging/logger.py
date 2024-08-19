@@ -1,7 +1,8 @@
 # Create and configure logger
 import logging
-from .handlers import handlers
+
 from ..shared import CONFIG
+from .handlers import handlers
 
 logging.basicConfig(
     level=logging.INFO,

@@ -54,5 +54,8 @@ def generate_user(userinfo, userdata):
      data["subscription"]  = {"name": "free"}
    return USER(data)
 
+def gen_user(data):
+   return USER(data)
+
 def chunkstring(string, length):
   return (string[0+i:length+i] for i in range(0, len(string), length))

@@ -5,7 +5,7 @@ from bot.core import database as db
 
 @Client.on_message(filters.command(["me"]))
 async def me(client, message):
-    user = await db.get_user(message.from_user.id)
+    user = await db.get_user(message.from_user.id, fetch_info=True)
 
     text = f"""
 **User:** {user.name}
