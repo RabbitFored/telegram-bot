@@ -119,9 +119,6 @@ class MongoDB(BaseDatabase):
     if userdata and fetch_info:
           userinfo = await self.userinfo.find_one(
               {"userid": userdata['userid']})
-    else:
-        return False
-
 
     if userdata:
       data = {}
