@@ -71,10 +71,10 @@ class USER:
       userdata = {}
       
       #update lasteen
-      lastseen = msg.date
+      now = msg.date
       
-      userinfo["lastseen"] = lastseen
-      userdata["lastseen"] = lastseen
+      userinfo["lastseen"] = now
+      userdata["lastseen"] = now
 
       #make user active
       if self.status == "inactive":
