@@ -12,7 +12,7 @@ class Redis(BaseDatabase):
 
   def __init__(self, connection_uri):
     super().__init__(connection_uri)
-    self.client = aioredis.from_url("redis://redis-11796.c81.us-east-1-2.ec2.redns.redis-cloud.com:11796", password='')
+    self.client = aioredis.from_url("", password='')
 
   def __repr__(self):
     return f"tgbot.redis(client={self.client})"
