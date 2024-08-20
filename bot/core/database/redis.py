@@ -1,3 +1,4 @@
+'''
 from datetime import datetime, timedelta
 
 import aioredis
@@ -38,5 +39,5 @@ class Redis(BaseDatabase):
      return True
   async def get_user(self, userID, fetch_info=False):
     return False
-
+'''
 #TODO
