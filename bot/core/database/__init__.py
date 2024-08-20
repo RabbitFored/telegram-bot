@@ -3,7 +3,7 @@ import importlib
 from os.path import basename, dirname, isfile
 
 from .mongo import MongoDB
-from .redis import Redis
+#from .redis import Redis
 from ..shared import CONFIG
 
 db = MongoDB(CONFIG.mongouri)
