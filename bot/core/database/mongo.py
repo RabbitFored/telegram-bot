@@ -14,7 +14,7 @@ class MongoDB(BaseDatabase):
     self.client = AsyncIOMotorClient(connection_uri)
     self.db = self.client[CONFIG.database]
     self.userinfo = self.client['TELEGRAM']['usercache']
-    self.userdata = self.db['botdata']
+    self.userdata = self.db['userdata']
     self.statial = self.db['statial']
 
   def __repr__(self):
