@@ -27,5 +27,5 @@ async def statial(client, message):
 
     stats = await db.get_stats()
 
-    text = "**Statial**\n\n{stats}"
+    text = f"**Statial**\n\n{stats}"
     await message.reply_text(text)
