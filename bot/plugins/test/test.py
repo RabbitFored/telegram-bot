@@ -1,5 +1,5 @@
 from pyrogram import Client, filters
-from bot.core import database as db
+from bot.core import database as db, utils
 from bot.core.translation import Translator
 from bot.core.utils import generate_keyboard
 from bot import logger, CONFIG
@@ -53,10 +53,9 @@ async def test(client, message):
 
 @Client.on_message(filters.command(["test"]))
 async def test(client, message):
-    user = await db.get_user(message.from_user.id)
-    k = await db.find_user({"mails": "2pje1n8e@mail.bruva.co"})
-    print(k)
-    await message.reply(f"t {str((await db.list_database()))}")
+    m = await message.chat.ask(f"{utils.get_target_user(message)}")
+    user = utils.get_target_user(m)
+    await message.reply(f"t {user}")
     
 @Client.on_message(filters.command(["test2"]))
 async def test2(client, message):

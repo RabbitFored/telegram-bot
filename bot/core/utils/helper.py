@@ -1,7 +1,7 @@
 import re
 import dns.resolver
 from ..models import USER
-
+from pyrogram.enums import MessageEntityType
 def strip_script_tags(page):
     pattern = re.compile(r'\s?on\w+="[^"]+"\s?')
     result = re.sub(pattern, "", page)
@@ -35,18 +35,26 @@ def get_user(message):
 def get_target_user(message):
   userID = None
   username = None
-  
+
   args = message.text.split(" ")
   
-  if len(args) > 1:
-    t = args[1]
+  if message.entities and message.entities[0].type == MessageEntityType.BOT_COMMAND:
+    command = args[0]
+    args.pop(0)
+  else:
+    command = None
+
+  if len(args) > 0:
+    t = args[0]
     if t.isdigit():
       userID = int(t)
     else:
       username = t[1:] if t[0] == '@' else t
-  elif message.reply_to_message:
-    if message.reply_to_message.forward_from:
-      userID = message.reply_to_message.forward_from.id
+  elif command and message.reply_to_message:
+      if message.reply_to_message.forward_from:
+        userID = message.reply_to_message.forward_from.id
+      else:
+        userID = message.reply_to_message.from_user.id
   else:
     pass
   

@@ -16,7 +16,7 @@ async def change_function(client, query):
   
   func = getattr(module, f , None)
   if callable(func):
-    await func(client, query.message)
+    await func(client, query.message.reply_to_message)
   else:
     raise AttributeError(f"Function '{func}' not found in module '{module}'")
 
