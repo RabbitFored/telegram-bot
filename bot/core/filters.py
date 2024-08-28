@@ -27,7 +27,7 @@ async def user_check(_, c, msg):
 
   
 
-  user = await db.get_user(userID)
+  user = await db.get_user(userID, fetch_info=True)
   
   #add new user to db
   if not user:
