@@ -22,7 +22,7 @@ async def user_check(_, c, msg):
   
   
   #allow self
-  if userID == CONFIG.me.id:
+  if msg.from_user.is_self:
     return False
 
   
