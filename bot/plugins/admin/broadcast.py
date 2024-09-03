@@ -34,8 +34,8 @@ async def bcast(mode, msg, process):
             logger.info("FloodWait: " + str(e))
         except UserIsBlocked:
             process.data["failed"]+= 1
-            dser = db.get_user(user)
-            dser.setStatus("inactive")
+            dser = await db.get_user(user)
+            await dser.setStatus("inactive")
         except InputUserDeactivated:
             process.data["failed"]+= 1 
             await db.delete_user(user)
