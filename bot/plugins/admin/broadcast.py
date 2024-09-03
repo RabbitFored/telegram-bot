@@ -42,7 +42,7 @@ async def bcast(mode, msg, process):
             logger.info(f"removed deactivated user {user} from db")
         except PeerIdInvalid:
             process.data["failed"]+= 1 
-            logger.info(f"{user} : peer id invalid\n")
+            #logger.info(f"{user} : peer id invalid\n")
             # db.delete_user(user)
         except Exception as e:
             process.data["failed"]+= 1 
@@ -66,17 +66,19 @@ async def broadcast(client, message):
             )
             return
 
-        keyboard = [
-            [
-                InlineKeyboardButton("Check Progress", callback_data="ps_broadcast"),
-            ]
-        ]
-        await message.reply_text("Broadcasting...",                                                    reply_markup=InlineKeyboardMarkup(keyboard))
 
         mode = CONFIG.settings["broadcast"]["mode"]
         if len(message.text.split(" ")) > 1:
             mode = message.text.split(" ")[1]
             
         process = ProcessManager.create_process("broadcast")
+        print(process.process_id)
+        keyboard = [
+        [
+            InlineKeyboardButton("Check Progress", callback_data=f"ps_{process.process_id}"),
+        ]
+    ]
+        await message.reply_text("Broadcasting...",                                                    reply_markup=InlineKeyboardMarkup(keyboard))
+
         await process.start( bcast( mode, broadcast_msg, process ) )  
     

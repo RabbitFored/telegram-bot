@@ -1,7 +1,7 @@
 from pyrogram import Client
 from bot.core import filters as fltr
 import importlib
-from bot import strings, ProcessManager 
+from bot import strings, ProcessManager , logger
 from bot.core import utils
 from pyrogram import enums
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
@@ -29,18 +29,18 @@ async def change_text(client, query):
 
 @Client.on_callback_query(fltr.on_marker("ps"))
 async def ps(client, query):
-    process = ProcessManager.list_processes()
-    for p in process:
-      if p.name == 'broadcast':
+    pid = query.data.split("_")[-1]
+    process = ProcessManager.get_process(int(pid))
+    if process:
         keyboard = [
-          [
-              InlineKeyboardButton("Check Progress", callback_data="ps_broadcast"),
-          ]
-        ]
-        success = p.data['x']
-        failed = p.data['failed']
+      [
+          InlineKeyboardButton("Check Progress", callback_data=f"ps_{process.process_id}"),
+      ]
+  ]
+        success = process.data['x']
+        failed = process.data['failed']
         
-        count, total = success + failed, p.data["total"]
+        count, total = success + failed, process.data["total"]
         bar, percentage = utils.progressBar(count, total)
 
         text = f'''
@@ -50,5 +50,10 @@ failed: {failed}
 
 | {bar} | {percentage}%
         '''
-
-        await query.message.edit(text, reply_markup=InlineKeyboardMarkup(keyboard),parse_mode=enums.ParseMode.HTML)
+        try:
+          await query.message.edit(text, reply_markup=InlineKeyboardMarkup(keyboard), parse_mode=enums.ParseMode.HTML)
+        except Exception as e:
+          logger.error(e)
+        await query.answer(f"Broadcasting {count} of {total}")
+    else:
+        await query.answer("No broadcast process is running")
