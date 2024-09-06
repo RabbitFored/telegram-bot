@@ -175,3 +175,8 @@ downloads/
 #bot
 logs/
 tmp/
+plugins/
+
+#include_plugin
+!plugins/commons.py
+!plugins/callback.py

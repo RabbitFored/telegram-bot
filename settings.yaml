@@ -5,7 +5,22 @@ pyrogram:
   plugin_dir: "bot/plugins"
   #alt_port: true 
   #use_mongodb_for_session: true
+  #if true, port 5222 will be used to connect to Telegram.
+  #  test_mode: false            #connect to test servers 
+  #  use_ipv6: false
+  #  in_memory_session: false    #defaults to true when using session_string
+  #  proxy:
+  #    scheme: socks5   # "socks4", "socks5" and "http" are supported
+  #    hostname: 11.22.33.44
+  #    port: 1234
 
+plugins:
+ dir: "bot/plugins"
+ repo:
+   - "https://github.com/RabbitFored/telegram-bot-plugins.git"
+ include: ['admin', 'misc', 'stats', 'subscription' ,'hosting']
+ exclude: []
+    
 commands:
    prefix: ["/", "."]
    case_sensitive: false

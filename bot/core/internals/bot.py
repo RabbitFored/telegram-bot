@@ -12,7 +12,7 @@ if CONFIG.settings["pyrogram"].get("client_name", None):
     client_name = CONFIG.settings["pyrogram"]["client_name"]
 else:
     client_name = CONFIG.settings.get("app_name", "bot")
-
+    
 bot = Client(
     client_name,
     api_id=CONFIG.apiID,
@@ -20,7 +20,12 @@ bot = Client(
     bot_token=CONFIG.botTOKEN,
     session_string=CONFIG.session_string,
     plugins=dict(
-        root=CONFIG.settings.get('pyrogram').get("plugin_dir", "bot/plugins")),
+        root=CONFIG.settings.get('plugins', {}).get("dir", "bot/plugins"),
+        exclude=CONFIG.settings.get('plugins', {}).get("exclude", []),
+    )
+    
+    
+    ,
     alt_port=bool(CONFIG.settings.get('pyrogram').get("alt_port", False)),
     test_mode=bool(CONFIG.settings.get('pyrogram').get("test_mode", False)),
     in_memory=bool(

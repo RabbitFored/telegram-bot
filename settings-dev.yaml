@@ -2,9 +2,15 @@ app_name: tgbot
 app_version: 1.0.0
 
 pyrogram:
-  plugin_dir: "bot/plugins"
   alt_port: true 
   use_mongodb_for_session: true
+
+plugins:
+   dir: "bot/plugins"
+   repo:
+     - "https://github.com/RabbitFored/telegram-bot-plugins.git"
+   include: ['admin', 'misc', 'stats', 'subscription' ,'hosting']
+   exclude: []
 
 commands:
    prefix: ["/", "."]
