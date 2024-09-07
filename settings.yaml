@@ -29,7 +29,7 @@ commands:
 translation:
    dir: "bot/translation"
    default_language: "en"
-   use_from_env: false
+   use_from_env: true
 
 logging:
     loggers:
