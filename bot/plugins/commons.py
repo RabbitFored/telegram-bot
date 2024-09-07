@@ -47,7 +47,7 @@ async def aboutTheBot(client, message):
     channel_url = CONFIG.settings["links"]["channel_url"]
     group_url = CONFIG.settings["links"]["group_url"]
 
-    text = strings.get("about_txt")
+    text = strings.get("about_txt", name = client.me.first_name)
     keyboard = generate_keyboard(
         strings.get("about_btn", channel_url=channel_url, group_url=group_url))
 
