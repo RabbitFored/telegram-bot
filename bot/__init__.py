@@ -8,7 +8,7 @@ import tempfile
 from .core.internals import bot, web
 import subprocess
 import shutil
-
+import yaml
 #if version < 3.6, stop bot.
 if sys.version_info[0] < 3 or sys.version_info[1] < 6:
     logger.error(
@@ -35,7 +35,6 @@ except OSError as error:
     print(f"Directory can not be created, {error}")
 
 #install plugins
-
 load_modules = CONFIG.settings["plugins"]["load_modules"]
 if load_modules:
    plugins = CONFIG.settings.get("plugins", None)
@@ -59,10 +58,41 @@ if load_modules:
               logger.error(f"Caught error while cloning {REPO}")
 
           for plugin in PLUGIN_LIST:
-            plugin_name = plugin.strip()
+            plugin_name = plugin.strip().replace(".", "/")
             source = os.path.join(temp_plugin_dir, plugin_name)
             destination = os.path.join(PLUGIN_DIR, plugin_name)
             if os.path.exists(source):
                   shutil.copytree(source, destination, dirs_exist_ok=True)
             else:
                   logger.info(f"Plugin {plugin_name} not found")
+
+#install requirements::packages
+def find_requirements_files(root_dir):
+  requirements_files = []
+  for dirpath, _, filenames in os.walk(root_dir):
+      for file in filenames:
+          if file == 'config.yaml':
+              requirements_files.append(os.path.join(dirpath, file))
+  return requirements_files
+def load_packages_from_yaml(file_path):
+    with open(file_path, 'r') as file:
+        config = yaml.safe_load(file)
+    return config.get('packages', [])
+  
+packages = []
+
+config_files = find_requirements_files('bot/plugins/')
+for cfile in config_files:
+  pkg = load_packages_from_yaml(cfile)
+  packages += pkg
+  
+def install_packages(package_names):
+  for package in package_names:
+   try:
+      print(f"Installing {package}...")
+      subprocess.check_call(['pip', 'install', package])
+      print(f"Successfully installed {package}")
+   except subprocess.CalledProcessError as e:
+      print(f"Failed to install {package}: {e}")
+
+install_packages(packages)
