@@ -54,8 +54,8 @@ if load_modules:
               subprocess.run(['git', 'clone', REPO, source], check=True)
               shutil.copytree(source, destination, dirs_exist_ok=True)
               shutil.rmtree(source)
-            except Exception:
-              logger.error(f"Caught error while cloning {REPO}")
+            except Exception as e:
+              logger.error(f"Caught error while cloning {REPO}:, {e}")
 
           for plugin in PLUGIN_LIST:
             plugin_name = plugin.strip().replace(".", "/")
