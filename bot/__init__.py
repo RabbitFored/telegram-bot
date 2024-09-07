@@ -36,25 +36,33 @@ except OSError as error:
 
 #install plugins
 
-with tempfile.TemporaryDirectory(prefix=f"plugins_") as temp_dir:
-    plugins = CONFIG.settings.get("plugins", None)
-
-    if plugins:
-        PLUGIN_DIR = CONFIG.settings["plugins"].get("dir", "bot/plugins")
-        DOWNLOAD_DIR = temp_dir
-        REPO_URL = plugins.get("repo", [])
-        PLUGIN_LIST = plugins.get("include", [])
-
-        for REPO in REPO_URL:
-          try:
-              subprocess.run(['git', 'clone', REPO, DOWNLOAD_DIR], check=True)
-          except Exception:
+load_modules = CONFIG.settings["plugins"]["load_modules"]
+if load_modules:
+   plugins = CONFIG.settings.get("plugins", None)
+   if plugins:
+      PLUGIN_DIR = CONFIG.settings["plugins"].get("dir", "bot/plugins")
+      REPO_URL = plugins.get("repo", [])
+      PLUGIN_LIST = plugins.get("include", [])
+      if os.environ.get("plugin_repo", None):
+        REPO_URL = REPO_URL + os.environ.get("plugin_repo").split(",")
+      if os.environ.get("plugins", None):
+        PLUGIN_LIST = PLUGIN_LIST + os.environ.get("plugins").split(",")
+      with tempfile.TemporaryDirectory(prefix=f"plugins_") as temp_plugin_dir:
+          for REPO in REPO_URL:      
+            try:
+              source = temp_plugin_dir + str(REPO_URL.index(REPO))
+              destination = temp_plugin_dir
+              subprocess.run(['git', 'clone', REPO, source], check=True)
+              shutil.copytree(source, destination, dirs_exist_ok=True)
+              shutil.rmtree(source)
+            except Exception:
               logger.error(f"Caught error while cloning {REPO}")
 
-        for plugin in PLUGIN_LIST:
-            source = os.path.join(DOWNLOAD_DIR, plugin)
-            destination = os.path.join(PLUGIN_DIR, plugin)
+          for plugin in PLUGIN_LIST:
+            plugin_name = plugin.strip()
+            source = os.path.join(temp_plugin_dir, plugin_name)
+            destination = os.path.join(PLUGIN_DIR, plugin_name)
             if os.path.exists(source):
                   shutil.copytree(source, destination, dirs_exist_ok=True)
             else:
-                  logger.info(f"Plugin {plugin} not found")
+                  logger.info(f"Plugin {plugin_name} not found")

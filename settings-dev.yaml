@@ -6,10 +6,11 @@ pyrogram:
   use_mongodb_for_session: true
 
 plugins:
+   load_modules: false
    dir: "bot/plugins"
    repo:
      - "https://github.com/RabbitFored/telegram-bot-plugins.git"
-   include: ['admin', 'misc', 'stats', 'subscription' ,'hosting']
+   include: ['admin', 'misc', 'stats', 'subscription']
    exclude: []
 
 commands:
@@ -19,6 +20,7 @@ commands:
 translation:
    dir: "bot/translation"
    default_language: "en"
+   use_from_env: false
 
 logging:
     loggers:

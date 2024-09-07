@@ -1,7 +1,7 @@
 import os
 
 import yaml
-
+from .shared import CONFIG
 from . import logger
 
 
@@ -11,6 +11,7 @@ class Translator:
   
     def __init__(self, dir, default_language="en"):
         self.default_language = default_language
+        self.use_from_env = CONFIG.settings['translation'].get("use_from_env", False)
         translation_dir = dir
         for filename in os.listdir(translation_dir):
             if filename.endswith('.yaml'):
@@ -34,8 +35,11 @@ class Translator:
     def get(self, key, lang=None, **kwargs):
             if lang is None:
                 lang = self.default_language
-
-            translation = self.translations.get(lang, {}).get(key)
+            env_key = f"TR_{key.upper()}"
+            if self.use_from_env and env_key in os.environ:
+                translation = os.environ[env_key]
+            else:
+                translation = self.translations.get(lang, {}).get(key)
             if not translation:
                 logger.warning(f"Missing translation for key '{key}' in language '{lang}'.")
                 if lang != self.default_language:
