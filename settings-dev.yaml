@@ -7,11 +7,11 @@ pyrogram:
 
 plugins:
    load_modules: false
-   dir: "bot/plugins"
+   dir: "myplugins"
    repo:
      - "https://github.com/RabbitFored/telegram-bot-plugins.git"
    include: ['admin', 'misc', 'stats', 'subscription']
-   exclude: []
+   exclude: ['ostrich.botlist', 'ostrich.mailable']
 
 commands:
    prefix: ["/", "."]

@@ -33,8 +33,8 @@ async def user_check(_, c, msg):
   if not user:
     await db.add_user(msg)
   else:
-    if bool(user.is_banned):
-      return await msg.reply("You are banned from using this bot.")
+    #if bool(user.is_banned):
+     # return await msg.reply("You are banned from using this bot.")
     await user.refresh(msg)
     
   
@@ -54,12 +54,12 @@ async def user_check(_, c, msg):
     return False
 
   #warn flooding users
-  if antiflood and antiflood.is_flooding(userID):
-    await user.warn()
-    antiflood.flush_user(userID)
-    return await msg.reply(
-        "You are flooding me, slow down!\n\nFlooding may cause your account to be banned."
-    )
+  #if antiflood and antiflood.is_flooding(userID):
+  #  await user.warn()
+  #  antiflood.flush_user(userID)
+  #  return await msg.reply(
+  #      "You are flooding me, slow down!\n\nFlooding may cause your account to be banned."
+  #  )
 
   #force sub
   if bool(CONFIG.settings["filters"].get("force_sub", None)):
@@ -99,7 +99,6 @@ class group(filters.Filter, set):
 
 
 user_filter = filters.create(user_check)
-
 
 def on_data(data):
 

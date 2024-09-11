@@ -82,6 +82,7 @@ def load_packages_from_yaml(file_path):
 packages = []
 
 config_files = find_requirements_files('bot/plugins/')
+
 for cfile in config_files:
   pkg = load_packages_from_yaml(cfile)
   packages += pkg
