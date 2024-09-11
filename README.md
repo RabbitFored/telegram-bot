@@ -39,6 +39,9 @@ pip install -r requirements.txt
 python3 -m bot
 ```
 
+## Plugins:
+Check https://github.com/RabbitFored/telegram-bot-plugins
+
 ## Donations:
 
 <p> If you feel like showing your appreciation for this project, then how about buying me a coffee.</p>
