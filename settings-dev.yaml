@@ -11,7 +11,7 @@ plugins:
    repo:
      - "https://github.com/RabbitFored/telegram-bot-plugins.git"
    include: ['admin', 'misc', 'stats', 'subscription']
-   exclude: ['ostrich.botlist', 'ostrich.mailable']
+   exclude: ['ostrich.botlist', 'ostrich.mailable', 'ostrich.popcorn']
 
 commands:
    prefix: ["/", "."]
