@@ -1,6 +1,9 @@
-from ..shared import CONFIG
-import requests
 import time
+
+import requests
+from pyrogram.errors import ChatAdminRequired, UserNotParticipant
+
+from ..shared import CONFIG
 
 units = {"B": 1, "KB": 10**3, "MB": 10**6, "GB": 10**9, "TB": 10**12}
 
@@ -76,3 +79,14 @@ async def progress_func(
         "eta": eta
     }
 
+
+async def check_sub(client,chatID, userID, ignore_error=False):
+  from bot import logger
+  try:
+    await client.get_chat_member(chatID, userID)
+    return True
+  except UserNotParticipant:
+    return False
+  except Exception as e:
+    logger.error(f"Error while check chat member: {e}")
+    return ignore_error

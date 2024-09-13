@@ -2,6 +2,7 @@ import re
 import dns.resolver
 from ..models import USER
 from pyrogram.enums import MessageEntityType
+
 def strip_script_tags(page):
     pattern = re.compile(r'\s?on\w+="[^"]+"\s?')
     result = re.sub(pattern, "", page)

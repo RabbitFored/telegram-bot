@@ -11,7 +11,7 @@ plugins:
    repo:
      - "https://github.com/RabbitFored/telegram-bot-plugins.git"
    include: ['admin', 'misc', 'stats', 'subscription']
-   exclude: ['ostrich.botlist', 'ostrich.mailable', 'ostrich.popcorn']
+   exclude: ['ostrich']
 
 commands:
    prefix: ["/", "."]
@@ -57,10 +57,12 @@ subscriptions:
 - name: "premium"
   data:
     prices: 
-      - price: "100,xtr"
+      - price: "100,xtr||1usd"
+        title: "Monthly"
         validity: "1,month"
-      - price: "200,xtr"
-        validity: "3,month"
+      - price: "200,xtr||10usd"
+        title: "Yearly"
+        validity: "12,month"
     limits:
       max_mails: 10
       custom_domains: true
