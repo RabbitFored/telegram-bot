@@ -7,3 +7,4 @@ regex
 python-dotenv
 motor
 cachetools
+requests
