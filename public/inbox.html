@@ -1,0 +1,100 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+              <head>
+
+                  <title>Mailable WEB</title>
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.7/css/all.css" />
+                  <style>
+                      body {
+                          font-family: sans-serif;
+                          -webkit-font-smoothing: antialiased;
+                          font-size: 14px;
+                          line-height: 1.4;
+                          -webkit-text-size-adjust: 100%;
+                          background: white;
+                          color: black;
+                      }
+
+                      .body {
+                          width: 100%;
+                      }
+
+                      a {
+                          color: #3498db;
+                          text-decoration: none;
+                      }
+
+                      .header {
+                          width: 100%;
+                          height: 80px;
+                          display: block;
+                          background-color: #101010;
+                      }
+                      .header img {
+                          max-width: 100%;
+                          max-height: 100%;
+                          margin-left: 10px;
+                      }
+                      .inner_header {
+                          width: 1000px;
+                          height: 100%;
+                          display: flex;
+                          margin: -80px;
+                          margin-left: 70px;
+                      }
+                      .logo_container {
+                          height: 100%;
+                          display: table;
+                          float: left;
+                      }
+                      .logo_container h1 {
+                          color: white;
+                          height: 100%;
+                          display: table-cell;
+                          vertical-align: middle;
+                          font-family: "Montserrat";
+                          font-size: 32px;
+                          font-weight: 200;
+                      }
+                      .logo_container h1 span {
+                          font-weight: 800;
+                      }
+                      .navigation {
+                          position: absolute;
+                          right: 150px;
+                          float: right;
+                          height: 100%;
+                          margin-left: 100px;
+                      }
+                      .navigation a {
+                          height: 50px;
+                          display: table;
+                          float: left;
+                          padding: 0px 10px;
+                      }
+                      .navigation a:last-child {
+                          padding-right: 0px;
+                      }
+                      .navigation a li {
+                          display: table-cell;
+                          vertical-align: middle;
+                          height: 100%;
+                          color: white;
+                          font-family: "Montserrat";
+                          font-size: 16px;
+                      }
+                      .site-nav-icon {
+                          height: 15px;
+                          margin: -5px 0 0;
+                      }
+                  </style>
+              </head>
+
+              <body>
+                  {{content|safe}}
+              </body>
+          </div>
+      </div>
+</script>
+</html>
