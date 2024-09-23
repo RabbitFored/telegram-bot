@@ -37,7 +37,7 @@ logging:
       telegram:
         level: "INFO"
         chat: -1002233681213
-        thread: 2
+        thread: 50844
         chunk: 4000
       file:
         level: "DEBUG"
