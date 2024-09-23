@@ -182,8 +182,8 @@ class MongoDB(BaseDatabase):
 
   async def data_exists(self, data):
     query = {f'data.{key}': value for key, value in data.items()}
-    cursor = list((await self.userdata.find_one(query)))
-    return bool(cursor)
+    result = await self.userdata.find_one(query)
+    return bool(result)
 
   async def inc_stat(self, what, how):
     await self.statial.update_one({}, {"$inc": {what: how}})

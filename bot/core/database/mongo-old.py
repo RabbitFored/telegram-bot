@@ -1,4 +1,4 @@
-
+'''
 from bson.objectid import ObjectId
 from .. import utils
 from datetime import datetime, timedelta
@@ -166,3 +166,4 @@ async def get_active_users():
       'total_users': total_users,
       'active_users': active_users
   }
+  '''
