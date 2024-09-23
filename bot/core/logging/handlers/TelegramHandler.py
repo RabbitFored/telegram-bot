@@ -23,7 +23,7 @@ class TelegramHandler(logging.Handler):
             botapi("sendMessage", data)
 
 
-formatter = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
+formatter = logging.Formatter('%(levelname)s - %(message)s')
 
 tg_logger = CONFIG.settings["logging"]["handlers"]["telegram"]
 

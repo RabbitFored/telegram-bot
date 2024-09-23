@@ -7,7 +7,7 @@ from .handlers import handlers
 logging.basicConfig(
     level=logging.INFO,
     format=
-    '[%(asctime)s - %(levelname)s] - %(name)s - %(message)s',
+    '[%(asctime)s - %(levelname)s] - %(name)s - [%(filename)s:%(lineno)d] - %(message)s',
     datefmt='%d-%b-%y %H:%M:%S')
 
 # Initialize tgbot logger

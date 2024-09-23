@@ -10,7 +10,7 @@ def get_bytes(size):
    return int(float(number)*units[unit])
 
 formatter = logging.Formatter(
-'%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+'%(asctime)s - [%(filename)s:%(lineno)d] - %(name)s - %(levelname)s - %(message)s')
 
 file_logger = CONFIG.settings["logging"]["handlers"]["file"]
 if file_logger:
