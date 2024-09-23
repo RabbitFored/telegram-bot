@@ -19,7 +19,7 @@ plugins:
    dir: "bot/plugins"
    repo:
      - "https://github.com/RabbitFored/telegram-bot-plugins.git"
-   include: ['admin', 'misc', 'stats', 'subscription']
+   include: ['admin', 'misc']
    exclude: []
     
 commands:
