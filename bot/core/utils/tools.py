@@ -1,7 +1,7 @@
 import time
 
 import requests
-from pyrogram.errors import ChatAdminRequired, UserNotParticipant
+from pyrogram.errors import UserNotParticipant
 
 from ..shared import CONFIG
 

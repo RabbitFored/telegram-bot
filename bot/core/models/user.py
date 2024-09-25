@@ -62,9 +62,17 @@ class USER:
       }
       await db.update_user(self.ID, userdata=userdata)
       
-   async def remove_subscription(self, userID):
+   async def end_subscription(self, userID):
       userdata = {"subscription": ""}
       await db.update_user(userID, userdata=userdata)
+      data = {
+         "chat_id": self.ID,
+         "text": "<b>Your subscription expired.\n\nUse /upgrade to continue enjoying premium features</b>",
+         "parse_mode": "html"
+         }
+
+      requests.post(f"https://api.telegram.org/bot{CONFIG.botTOKEN}/sendMessage", 
+                        json=data)
 
    async def refresh(self, msg):
       userinfo = {}
@@ -97,15 +105,7 @@ class USER:
       if self.subscription:
          if not self.subscription["name"] == "free":
             if now > self.subscription['expiry_date']:
-               await self.remove_subscription(self.ID)
-               data = {
-                  "chat_id": self.ID,
-                  "text": "<b>Your subscription expired.\n\nUse /upgrade to continue enjoying premium features</b>",
-                  "parse_mode": "html"
-                  }
-               
-               r = requests.post(f"https://api.telegram.org/bot{CONFIG.botTOKEN}/sendMessage", 
-                                 json=data)
+               await self.end_subscription(self.ID)
       
 
    async def ban(self):

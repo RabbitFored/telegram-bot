@@ -33,12 +33,17 @@ def get_user(message):
   else:
     return None
 
-def get_target_user(message):
+def get_target_user(message, position=0):
   userID = None
   username = None
 
   args = message.text.split(" ")
-  
+  for entity in message.entities:
+    if entity.type == MessageEntityType.MENTION:
+      mention =  message.text[entity.offset:entity.offset+entity.length] 
+      username = mention[1:] if mention[0] == '@' else mention
+      return userID, username
+    
   if message.entities and message.entities[0].type == MessageEntityType.BOT_COMMAND:
     command = args[0]
     args.pop(0)
@@ -46,7 +51,7 @@ def get_target_user(message):
     command = None
 
   if len(args) > 0:
-    t = args[0]
+    t = args[position]
     if t.isdigit():
       userID = int(t)
     else:
