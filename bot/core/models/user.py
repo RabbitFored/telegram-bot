@@ -1,9 +1,10 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from os import pread, uname
 from ..database import db
 from ..shared import CONFIG
 import requests
 from ..utils import parse_period
+
 
 class Data(dict):
 
@@ -49,24 +50,61 @@ class Usage(dict):
    def __init__(self, userID, usage):
       self.userID = userID
       self.usage = usage
-     
 
    async def refresh(self):
       for name in self.usage:
          expiry = self.usage[name].get("expiry", None)
          refresh_period = self.usage[name].get("refresh_period", None)
-         if expiry and expiry < datetime.now():
-             if refresh_period:
-                data = {}
-                reset_time = datetime.now() + parse_period(refresh_period)
-                data[f"usage.{name}.value"] = 0
-                data[f"usage.{name}.refresh_period"] = refresh_period
-                data[f"usage.{name}.expiry"] = reset_time
-                await db.update_user(userID=self.userID, userdata=data)
-             else:
-                await self.unset(name)
+         round_to_start = self.usage[name].get("round_to_start", False)
+         if expiry and expiry < datetime.now(timezone.utc):
+            if refresh_period:
+               data = {}
+               reset_time = self.calculate_reset_time(refresh_period,
+                                                      round_to_start)
+               data[f"usage.{name}.value"] = 0
+               data[f"usage.{name}.refresh_period"] = refresh_period
+               data[f"usage.{name}.expiry"] = reset_time
+               await db.update_user(userID=self.userID, userdata=data)
+            else:
+               await self.unset(name)
 
-   async def set(self, name, value=None, refresh_period=None, expiry=None):
+   def calculate_reset_time(self, refresh_period: str, round_to_start=False):
+      now = datetime.now(timezone.utc)
+      unit = refresh_period[-1]
+
+      if round_to_start:
+         if unit == 'd':
+            return now.replace(hour=0, minute=0, second=0,
+                               microsecond=0) + timedelta(days=1)
+         elif unit == 'm':
+            next_month = (now.month % 12) + 1
+            next_year = now.year + (now.month // 12)
+            return now.replace(year=next_year,
+                               month=next_month,
+                               day=1,
+                               hour=0,
+                               minute=0,
+                               second=0,
+                               microsecond=0)
+         elif unit == 'y':
+            return now.replace(year=now.year + 1,
+                               month=1,
+                               day=1,
+                               hour=0,
+                               minute=0,
+                               second=0,
+                               microsecond=0)
+         else:
+            raise ValueError("Unsupported refresh period")
+
+      return now + parse_period(refresh_period)
+
+   async def set(self,
+                 name,
+                 value=None,
+                 refresh_period=None,
+                 expiry=None,
+                 round_to_start=False):
       await self.refresh()
       data = {}
       if value:
@@ -74,27 +112,44 @@ class Usage(dict):
       if refresh_period:
          data[f"usage.{name}.refresh_period"] = refresh_period
          if not expiry:
-            reset_time = datetime.now() + parse_period(refresh_period)
+            reset_time = self.calculate_reset_time(refresh_period,
+                                                   round_to_start)
             data[f"usage.{name}.expiry"] = reset_time
       if expiry:
          data[f"usage.{name}.expiry"] = expiry
+      if round_to_start:
+         data[f"usage.{name}.round_to_start"] = round_to_start
 
       await db.update_user(userID=self.userID, userdata=data)
 
-   async def inc(self, name, amt=1):
+   async def inc(self,
+                 name,
+                 value=1,
+                 refresh_period=None,
+                 expiry=None,
+                 round_to_start=False):
       await self.refresh()
-    #  if expiry:, expiry=None
-    ##     await db.update_user(userID=self.userID,
-    #        userdata={f"usage.{name}.expiry": expiry},
-    #        dmode="$set")
-      await db.update_user(userID=self.userID,
-                           userdata={f"usage.{name}.value": amt},
-                           dmode="$inc")
+      if name not in self.usage:
+         await self.set(name,
+                        value=value,
+                        refresh_period=refresh_period,
+                        expiry=expiry,
+                        round_to_start=round_to_start)
+      else:
+         await db.update_user(userID=self.userID,
+                              userdata={f"usage.{name}.value": value},
+                              dmode="$inc")
 
    async def unset(self, name):
       await db.update_user(userID=self.userID,
                            userdata={f"usage.{name}": ""},
                            dmode="$unset")
+
+   def get(self, name):
+      if name in self.usage:
+           return self.usage[name]["value"]
+      else:
+         return 0
 
 
 class USER:
@@ -124,8 +179,8 @@ class USER:
    async def upgrade(self, plan, transaction_id):
       userdata = {
           "subscription.name": plan,
-          "subscription.subscription_date": datetime.now(),
-          "subscription.expiry_date": datetime.now() + timedelta(days=30),
+          "subscription.subscription_date": datetime.now(timezone.utc),
+          "subscription.expiry_date": datetime.now(timezone.utc) + timedelta(days=30),
           "subscription.transaction_id": transaction_id,
       }
       await db.update_user(self.ID, userdata=userdata)
@@ -133,8 +188,8 @@ class USER:
    async def gift(self, plan, byUSER):
       userdata = {
           "subscription.name": plan,
-          "subscription.subscription_date": datetime.now(),
-          "subscription.expiry_date": datetime.now() + timedelta(days=30),
+          "subscription.subscription_date": datetime.now(timezone.utc),
+          "subscription.expiry_date": datetime.now(timezone.utc) + timedelta(days=30),
           "subscription.gift_by": byUSER
       }
       await db.update_user(self.ID, userdata=userdata)
