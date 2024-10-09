@@ -133,15 +133,17 @@ class Usage(dict):
                  round_to_start=False):
       await self.refresh()
       if name not in self.usage:
-         await self.set(name,
+            await self.set(name,
                         value=value,
                         refresh_period=refresh_period,
                         expiry=expiry,
                         round_to_start=round_to_start)
       else:
-         await db.update_user(userID=self.userID,
-                              userdata={f"usage.{name}.value": value},
-                              dmode="$inc")
+            await self.set(name,
+                           value=self.usage[name].get("value", 0) + value,
+                           refresh_period=refresh_period,
+                           expiry=expiry,
+                           round_to_start=round_to_start)
 
    async def unset(self, name):
       await db.update_user(userID=self.userID,
