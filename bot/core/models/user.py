@@ -3,7 +3,6 @@ from os import pread, uname
 from ..database import db
 from ..shared import CONFIG
 import requests
-import time
 
 class Data(dict):
 
@@ -20,6 +19,17 @@ class Data(dict):
    async def rm(self, value):
       await db.update_user(userID=self.userID, userdata={"data" : value}, dmode="$pull")
 
+class Credits:
+   def __init__(self, userID, value):
+      self.userID = userID
+      self.value = value
+   
+   async def consume(self, amt=1):
+      await db.update_user(userID=self.userID, userinfo={"credits": -amt}, dmode="$inc")
+      self.value -= amt
+   async def provide(self, amt=1):
+      await db.update_user(userID=self.userID, userinfo={"credits":amt}, dmode="$inc")
+      self.value += amt
 
 class USER:
    def __init__(self, data):
@@ -30,7 +40,9 @@ class USER:
       self.status =  data.get('status', None)
       self.is_banned =  data.get('is_banned', None)
       self.warns =  data.get('warns', None)
+      self.credits = Credits(self.ID, data.get('credits', 0))
       self.data = Data(self.ID, data.get('data', {}))
+      self.usage =  data.get('usage', {})
       self.settings =  data.get('settings', {})
       self.subscription =  data.get('subscription', {})
       self.firstseen =  data.get('firstseen', None)
@@ -80,10 +92,8 @@ class USER:
       
       #update lasteen
       now = msg.date
+      await db.update_lastseen(self.ID, now)
       
-      userinfo["lastseen"] = now
-      userdata["lastseen"] = now
-
       #make user active
       if self.status == "inactive":
          userdata["status"] = "active"
@@ -102,12 +112,10 @@ class USER:
       if self.name != name:
          userinfo["name"] = name
       await db.update_user(self.ID, userinfo, userdata)
-      if self.subscription:
-         if not self.subscription["name"] == "free":
+      if self.subscription and self.subscription["name"] != "free":
             if now > self.subscription['expiry_date']:
                await self.end_subscription(self.ID)
       
-
    async def ban(self):
       userdata = {"is_banned": True}
       await db.update_user(self.ID, userdata=userdata)

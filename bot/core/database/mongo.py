@@ -88,16 +88,19 @@ class MongoDB(BaseDatabase):
       data["subscription"] = userdata.get("subscription", {"name": "free"})
       data["status"] = userdata.get("status", "active")
       data["data"] = userdata.get("data", {})
+      data["usage"] = userdata.get("usage", {})
       data["settings"] = userdata.get("settings", {})
       data["firstseen"] = userdata['firstseen']
       data["lastseen"] = userdata['lastseen']
       if userinfo:
+
         data["username"] = userinfo['username'][-1] if userinfo[
             'username'] else ""
         data["dc"] = userinfo['dc']
         data["name"] = userinfo['name'][-1] if userinfo['name'] else ""
         data["is_banned"] = bool(userinfo.get("is_banned", False)) or bool(
             userdata.get("is_banned", False))
+        data["credits"] = userinfo.get("credits", 0)
       user = utils.gen_user(data)
       u = {"user": user,
           "fetch_info":fetch_info}
@@ -190,7 +193,8 @@ class MongoDB(BaseDatabase):
     return True
 
   async def update_user(self, userID, userinfo=None, userdata=None, dmode="$set"):
-
+    if not userinfo and not userdata:
+      return False
     filter = {"userid": userID}
     
     if userinfo:
@@ -205,7 +209,7 @@ class MongoDB(BaseDatabase):
                     "username": {
                         "$each": [username],
                         "$slice":
-                        -20  # Keep only the last 20 elements in the array
+                        -1  # Keep only the last 20 elements in the array
                     }
                 }
             })
@@ -218,19 +222,14 @@ class MongoDB(BaseDatabase):
                     "name": {
                         "$each": [name],
                         "$slice":
-                        -20  # Keep only the last 20 elements in the array
+                        -1  # Keep only the last 20 elements in the array
                     }
                 }
             })
         userinfo.pop("name")
-      await self.userinfo.update_one(filter, {"$set": userinfo})
+      await self.userinfo.update_one(filter, {dmode: userinfo})
 
-    if userdata:
-      no_recache = ["lastseen"]
-      
-      if len(set(userdata.keys()) - set(no_recache)) > 0 and userID in self.cache:
-        del self.cache[userID]
-        
+    if userdata: 
       to_pop = []
       for key, value in userdata.items():
         if value == "":
@@ -250,9 +249,17 @@ class MongoDB(BaseDatabase):
         userdata.pop(key, None) 
     
       await self.userdata.update_one(filter, {"$set": userdata})
-
+      del self.cache[userID]
+      
+  async def update_lastseen(self, userID, lastseen):
+     filter = {"userid": userID}
+     await self.userdata.update_one(filter, {"$set": {"lastseen": lastseen}})
+     await self.userinfo.update_one(filter, {"$set": {"lastseen": lastseen}})
+     
+    
   async def delete_user(self, userID, clear_info=False):
     if clear_info:
       await self.userinfo.delete_one({"userid": userID})
     await self.userdata.delete_one({"userid": userID})
+    del self.cache[userID]
     return True
