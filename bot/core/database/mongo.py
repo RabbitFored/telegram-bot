@@ -248,8 +248,9 @@ class MongoDB(BaseDatabase):
       for key in to_pop:
         userdata.pop(key, None) 
     
-      await self.userdata.update_one(filter, {"$set": userdata})
-      del self.cache[userID]
+      await self.userdata.update_one(filter, {dmode: userdata})
+      if userID in self.cache:
+        del self.cache[userID]
       
   async def update_lastseen(self, userID, lastseen):
      filter = {"userid": userID}
@@ -261,5 +262,6 @@ class MongoDB(BaseDatabase):
     if clear_info:
       await self.userinfo.delete_one({"userid": userID})
     await self.userdata.delete_one({"userid": userID})
-    del self.cache[userID]
+    if userID in self.cache:
+      del self.cache[userID]
     return True

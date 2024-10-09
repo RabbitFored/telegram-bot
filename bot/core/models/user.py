@@ -3,6 +3,7 @@ from os import pread, uname
 from ..database import db
 from ..shared import CONFIG
 import requests
+from ..utils import parse_period
 
 class Data(dict):
 
@@ -11,42 +12,110 @@ class Data(dict):
       self.userID = userID
 
    async def addToSet(self, value):
-      await db.update_user(userID=self.userID, userdata={"data" : value},dmode="$addToSet")
+      await db.update_user(userID=self.userID,
+                           userdata={"data": value},
+                           dmode="$addToSet")
 
    async def set(self, value):
-      await db.update_user(userID=self.userID, userdata={"data" : value})
+      await db.update_user(userID=self.userID, userdata={"data": value})
 
    async def rm(self, value):
-      await db.update_user(userID=self.userID, userdata={"data" : value}, dmode="$pull")
+      await db.update_user(userID=self.userID,
+                           userdata={"data": value},
+                           dmode="$pull")
+
 
 class Credits:
+
    def __init__(self, userID, value):
       self.userID = userID
       self.value = value
-   
+
    async def consume(self, amt=1):
-      await db.update_user(userID=self.userID, userinfo={"credits": -amt}, dmode="$inc")
+      await db.update_user(userID=self.userID,
+                           userinfo={"credits": -amt},
+                           dmode="$inc")
       self.value -= amt
+
    async def provide(self, amt=1):
-      await db.update_user(userID=self.userID, userinfo={"credits":amt}, dmode="$inc")
+      await db.update_user(userID=self.userID,
+                           userinfo={"credits": amt},
+                           dmode="$inc")
       self.value += amt
 
+
+class Usage(dict):
+
+   def __init__(self, userID, usage):
+      self.userID = userID
+      self.usage = usage
+     
+
+   async def refresh(self):
+      for name in self.usage:
+         expiry = self.usage[name].get("expiry", None)
+         refresh = self.usage[name].get("refresh_period", None)
+         if expiry and expiry < datetime.now():
+             if refresh:
+                data = {}
+                reset_time = datetime.now() + parse_period(refresh)
+                data[f"usage.{name}.value"] = 0
+                data[f"usage.{name}.refresh_period"] = refresh
+                data[f"usage.{name}.expiry"] = reset_time
+                await db.update_user(userID=self.userID, userdata=data)
+             else:
+                await self.unset(name)
+
+   async def set(self, name, value=None, refresh_period=None, expiry=None):
+      await self.refresh()
+      data = {}
+      if value:
+         data[f"usage.{name}.value"] = value
+      if refresh_period:
+         data[f"usage.{name}.refresh_period"] = refresh_period
+         if not expiry:
+            reset_time = datetime.now() + parse_period(refresh_period)
+            data[f"usage.{name}.expiry"] = reset_time
+      elif expiry:
+         data[f"usage.{name}.expiry"] = expiry
+      else:
+         pass
+
+      await db.update_user(userID=self.userID, userdata=data)
+
+   async def inc(self, name, amt=1):
+      await self.refresh()
+    #  if expiry:, expiry=None
+    ##     await db.update_user(userID=self.userID,
+    #        userdata={f"usage.{name}.expiry": expiry},
+    #        dmode="$set")
+      await db.update_user(userID=self.userID,
+                           userdata={f"usage.{name}.value": amt},
+                           dmode="$inc")
+
+   async def unset(self, name):
+      await db.update_user(userID=self.userID,
+                           userdata={f"usage.{name}": ""},
+                           dmode="$unset")
+
+
 class USER:
+
    def __init__(self, data):
       self.ID = data.get('userid', None)
-      self.name =  data.get('name', None)
-      self.username =  data.get('username', None)
+      self.name = data.get('name', None)
+      self.username = data.get('username', None)
       self.dc = data.get('dc', None)
-      self.status =  data.get('status', None)
-      self.is_banned =  data.get('is_banned', None)
-      self.warns =  data.get('warns', None)
+      self.status = data.get('status', None)
+      self.is_banned = data.get('is_banned', None)
+      self.warns = data.get('warns', None)
       self.credits = Credits(self.ID, data.get('credits', 0))
       self.data = Data(self.ID, data.get('data', {}))
-      self.usage =  data.get('usage', {})
-      self.settings =  data.get('settings', {})
-      self.subscription =  data.get('subscription', {})
-      self.firstseen =  data.get('firstseen', None)
-      self.lastseen =  data.get('lastseen', None)
+      self.usage = Usage(self.ID, data.get('usage', {}))
+      self.settings = data.get('settings', {})
+      self.subscription = data.get('subscription', {})
+      self.firstseen = data.get('firstseen', None)
+      self.lastseen = data.get('lastseen', None)
 
    def get_limits(self):
       subscriptions = CONFIG.settings["subscriptions"]
@@ -56,51 +125,51 @@ class USER:
 
    async def upgrade(self, plan, transaction_id):
       userdata = {
-            "subscription.name": plan,
-            "subscription.subscription_date": datetime.now(),
-            "subscription.expiry_date":
-            datetime.now() + timedelta(days=30),
-            "subscription.transaction_id": transaction_id,
-        }
-      await db.update_user(self.ID, userdata=userdata)
-
-   async def gift(self,plan, byUSER):
-      userdata = {
-         "subscription.name": plan,
-         "subscription.subscription_date": datetime.now(),
-         "subscription.expiry_date":
-         datetime.now() + timedelta(days=30),
-         "subscription.gift_by" : byUSER
+          "subscription.name": plan,
+          "subscription.subscription_date": datetime.now(),
+          "subscription.expiry_date": datetime.now() + timedelta(days=30),
+          "subscription.transaction_id": transaction_id,
       }
       await db.update_user(self.ID, userdata=userdata)
-      
+
+   async def gift(self, plan, byUSER):
+      userdata = {
+          "subscription.name": plan,
+          "subscription.subscription_date": datetime.now(),
+          "subscription.expiry_date": datetime.now() + timedelta(days=30),
+          "subscription.gift_by": byUSER
+      }
+      await db.update_user(self.ID, userdata=userdata)
+
    async def end_subscription(self, userID):
       userdata = {"subscription": ""}
       await db.update_user(userID, userdata=userdata)
       data = {
-         "chat_id": self.ID,
-         "text": "<b>Your subscription expired.\n\nUse /upgrade to continue enjoying premium features</b>",
-         "parse_mode": "html"
-         }
+          "chat_id": self.ID,
+          "text":
+          "<b>Your subscription expired.\n\nUse /upgrade to continue enjoying premium features</b>",
+          "parse_mode": "html"
+      }
 
-      requests.post(f"https://api.telegram.org/bot{CONFIG.botTOKEN}/sendMessage", 
-                        json=data)
+      requests.post(
+          f"https://api.telegram.org/bot{CONFIG.botTOKEN}/sendMessage",
+          json=data)
 
    async def refresh(self, msg):
       userinfo = {}
       userdata = {}
-      
+
       #update lasteen
       now = msg.date
       await db.update_lastseen(self.ID, now)
-      
+
       #make user active
       if self.status == "inactive":
          userdata["status"] = "active"
 
       #set dc
       if self.dc == 0 and msg.from_user.dc_id:
-        userinfo["dc"] =  msg.from_user.dc_id
+         userinfo["dc"] = msg.from_user.dc_id
 
       if msg.from_user.username != self.username:
          userinfo["username"] = msg.from_user.username
@@ -113,9 +182,10 @@ class USER:
          userinfo["name"] = name
       await db.update_user(self.ID, userinfo, userdata)
       if self.subscription and self.subscription["name"] != "free":
-            if now > self.subscription['expiry_date']:
-               await self.end_subscription(self.ID)
-      
+         if now > self.subscription['expiry_date']:
+            await self.end_subscription(self.ID)
+      await self.usage.refresh()
+
    async def ban(self):
       userdata = {"is_banned": True}
       await db.update_user(self.ID, userdata=userdata)

@@ -1,7 +1,7 @@
 import re
 import dns.resolver
-from ..models import USER
 from pyrogram.enums import MessageEntityType
+from datetime import timedelta
 
 def strip_script_tags(page):
     pattern = re.compile(r'\s?on\w+="[^"]+"\s?')
@@ -67,6 +67,7 @@ def get_target_user(message, position=0):
   return userID, username
 
 def generate_user(userinfo, userdata):
+   from ..models import USER
    data = {
      "userid": userinfo['userid'],
      "username": userinfo['username'][-1] if userinfo['username'] else "",
@@ -87,7 +88,34 @@ def generate_user(userinfo, userdata):
    return USER(data)
 
 def gen_user(data):
+   from ..models import USER
    return USER(data)
 
 def chunkstring(string, length):
   return (string[0+i:length+i] for i in range(0, len(string), length))
+
+def parse_period(period: str):
+   time_mapping = {
+      's': 'seconds',
+      'd': 'days',
+      'h': 'hours',
+      'm': 'months',
+      'y': 'years'
+  }
+  # Last character determines the unit ('d', 'h', 'm', 'y')
+   unit = period[-1]  # Extract the last character
+   value = int(period[:-1])  # Extract the number part
+
+   if unit == 's':
+     return timedelta(seconds=value)
+   elif unit == 'd':
+      return timedelta(days=value)
+   elif unit == 'h':
+      return timedelta(hours=value)
+   elif unit == 'm':
+       return timedelta(days=value * 30)  # Approximate a month as 30 days
+   elif unit == 'y':
+      return timedelta(days=value * 365)  # Approximate a year as 365 days
+   else:
+      raise ValueError(f"Invalid period unit: {unit}")
+  
