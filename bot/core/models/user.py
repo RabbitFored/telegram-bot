@@ -57,8 +57,8 @@ class Usage(dict):
          refresh_period = self.usage[name].get("refresh_period", None)
          round_to_start = self.usage[name].get("round_to_start", False)
          if expiry is not None and expiry.tzinfo is None:
-            expiry = expiry.replace(tzinfo=timezone.utc) 
-            
+            expiry = expiry.replace(tzinfo=timezone.utc)
+
          if expiry and expiry < datetime.now(timezone.utc):
             if refresh_period:
                data = {}
@@ -133,18 +133,23 @@ class Usage(dict):
                  round_to_start=False):
       await self.refresh()
       if name not in self.usage:
-            await self.set(name,
+         await self.set(name,
                         value=value,
                         refresh_period=refresh_period,
                         expiry=expiry,
                         round_to_start=round_to_start)
       else:
+         if refresh_period and refresh_period != self.usage[name][
+             "refresh_period"]:
             await self.set(name,
-                           value=self.usage[name].get("value", 0) + value,
-                           refresh_period=refresh_period,
-                           expiry=expiry,
-                           round_to_start=round_to_start)
-
+               value=self.usage[name].get("value", 0) + value,
+               refresh_period=refresh_period,
+               expiry=expiry,
+               round_to_start=round_to_start)
+         else:
+           await db.update_user(userID=self.userID,
+              userdata={f"usage.{name}.value": value},
+              dmode="$inc")
    async def unset(self, name):
       await db.update_user(userID=self.userID,
                            userdata={f"usage.{name}": ""},
@@ -152,7 +157,7 @@ class Usage(dict):
 
    def get(self, name, default=0):
       if name in self.usage:
-           return self.usage[name]["value"]
+         return self.usage[name]["value"]
       else:
          return default
 
@@ -183,19 +188,27 @@ class USER:
 
    async def upgrade(self, plan, transaction_id):
       userdata = {
-          "subscription.name": plan,
-          "subscription.subscription_date": datetime.now(timezone.utc),
-          "subscription.expiry_date": datetime.now(timezone.utc) + timedelta(days=30),
-          "subscription.transaction_id": transaction_id,
+          "subscription.name":
+          plan,
+          "subscription.subscription_date":
+          datetime.now(timezone.utc),
+          "subscription.expiry_date":
+          datetime.now(timezone.utc) + timedelta(days=30),
+          "subscription.transaction_id":
+          transaction_id,
       }
       await db.update_user(self.ID, userdata=userdata)
 
    async def gift(self, plan, byUSER):
       userdata = {
-          "subscription.name": plan,
-          "subscription.subscription_date": datetime.now(timezone.utc),
-          "subscription.expiry_date": datetime.now(timezone.utc) + timedelta(days=30),
-          "subscription.gift_by": byUSER
+          "subscription.name":
+          plan,
+          "subscription.subscription_date":
+          datetime.now(timezone.utc),
+          "subscription.expiry_date":
+          datetime.now(timezone.utc) + timedelta(days=30),
+          "subscription.gift_by":
+          byUSER
       }
       await db.update_user(self.ID, userdata=userdata)
 
