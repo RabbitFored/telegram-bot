@@ -98,7 +98,7 @@ class Usage(dict):
                                second=0,
                                microsecond=0)
          else:
-            raise ValueError("Unsupported refresh period")
+            pass
 
       return now + parse_period(refresh_period)
 
