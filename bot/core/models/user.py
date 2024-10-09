@@ -54,13 +54,13 @@ class Usage(dict):
    async def refresh(self):
       for name in self.usage:
          expiry = self.usage[name].get("expiry", None)
-         refresh = self.usage[name].get("refresh_period", None)
+         refresh_period = self.usage[name].get("refresh_period", None)
          if expiry and expiry < datetime.now():
-             if refresh:
+             if refresh_period:
                 data = {}
-                reset_time = datetime.now() + parse_period(refresh)
+                reset_time = datetime.now() + parse_period(refresh_period)
                 data[f"usage.{name}.value"] = 0
-                data[f"usage.{name}.refresh_period"] = refresh
+                data[f"usage.{name}.refresh_period"] = refresh_period
                 data[f"usage.{name}.expiry"] = reset_time
                 await db.update_user(userID=self.userID, userdata=data)
              else:
