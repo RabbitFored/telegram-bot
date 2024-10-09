@@ -150,11 +150,11 @@ class Usage(dict):
                            userdata={f"usage.{name}": ""},
                            dmode="$unset")
 
-   def get(self, name):
+   def get(self, name, default=0):
       if name in self.usage:
            return self.usage[name]["value"]
       else:
-         return 0
+         return default
 
 
 class USER:
