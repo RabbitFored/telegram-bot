@@ -56,6 +56,9 @@ class Usage(dict):
          expiry = self.usage[name].get("expiry", None)
          refresh_period = self.usage[name].get("refresh_period", None)
          round_to_start = self.usage[name].get("round_to_start", False)
+         if expiry is not None and expiry.tzinfo is None:
+            expiry = expiry.replace(tzinfo=timezone.utc) 
+            
          if expiry and expiry < datetime.now(timezone.utc):
             if refresh_period:
                data = {}
