@@ -76,10 +76,8 @@ class Usage(dict):
          if not expiry:
             reset_time = datetime.now() + parse_period(refresh_period)
             data[f"usage.{name}.expiry"] = reset_time
-      elif expiry:
+      if expiry:
          data[f"usage.{name}.expiry"] = expiry
-      else:
-         pass
 
       await db.update_user(userID=self.userID, userdata=data)
 
