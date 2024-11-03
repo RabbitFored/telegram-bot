@@ -7,7 +7,7 @@ if __name__ == "__main__":
         from . import web
         logger.info("Starting web client and bot")
         bot.start()
-        
+
         #set self
         CONFIG.me = bot.get_me()
 

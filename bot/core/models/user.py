@@ -33,6 +33,7 @@ class Credits:
       self.value = value
 
    async def consume(self, amt=1):
+   
       await db.update_user(userID=self.userID,
                            userinfo={"credits": -amt},
                            dmode="$inc")
@@ -212,9 +213,9 @@ class USER:
       }
       await db.update_user(self.ID, userdata=userdata)
 
-   async def end_subscription(self, userID):
+   async def end_subscription(self):
       userdata = {"subscription": ""}
-      await db.update_user(userID, userdata=userdata)
+      await db.update_user(self.ID, userdata=userdata)
       data = {
           "chat_id": self.ID,
           "text":
@@ -254,7 +255,7 @@ class USER:
       await db.update_user(self.ID, userinfo, userdata)
       if self.subscription and self.subscription["name"] != "free":
          if now > self.subscription['expiry_date']:
-            await self.end_subscription(self.ID)
+            await self.end_subscription()
       await self.usage.refresh()
 
    async def ban(self):
