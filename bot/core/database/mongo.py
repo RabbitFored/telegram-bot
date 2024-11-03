@@ -9,10 +9,10 @@ from .base import BaseDatabase
 
 class MongoDB(BaseDatabase):
 
-  def __init__(self, connection_uri):
+  def __init__(self, connection_uri, db_name=CONFIG.database):
     super().__init__(connection_uri)
     self.client = AsyncIOMotorClient(connection_uri)
-    self.db = self.client[CONFIG.database]
+    self.db = self.client[db_name]
     self.userinfo = self.client['TELEGRAM']['usercache']
     self.userdata = self.db['userdata']
     self.statial = self.db['statial']

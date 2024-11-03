@@ -4,4 +4,4 @@ from . import models
 from .process import ProcessManager
 from .translation import Translator
 
-from .database import db as database
+from .database import db as database, MongoDB
