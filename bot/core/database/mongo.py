@@ -239,7 +239,7 @@ class MongoDB(BaseDatabase):
           data = {}
           for subkey, subvalue in value.items():
             if subvalue == "":
-              await self.userdata.update_one(filter, {"$unset": {key: ""}})
+              await self.userdata.update_one(filter, {"$unset": {f'data.{subkey}': ""}})
             else:
               data[f'data.{subkey}'] = subvalue
           await self.userdata.update_one(filter, {dmode: data})
