@@ -35,13 +35,13 @@ class Credits:
    async def consume(self, amt=1):
    
       await db.update_user(userID=self.userID,
-                           userinfo={"credits": -amt},
+                           userdata={"credits": -amt},
                            dmode="$inc")
       self.value -= amt
 
    async def provide(self, amt=1):
       await db.update_user(userID=self.userID,
-                           userinfo={"credits": amt},
+                           userdata={"credits": amt},
                            dmode="$inc")
       self.value += amt
 
@@ -228,7 +228,7 @@ class USER:
           json=data)
 
    async def refresh(self, msg):
-      userinfo = {}
+      #userinfo = {}
       userdata = {}
 
       #update lasteen
@@ -241,18 +241,18 @@ class USER:
 
       #set dc
       if self.dc == 0 and msg.from_user.dc_id:
-         userinfo["dc"] = msg.from_user.dc_id
+         userdata["dc"] = msg.from_user.dc_id
 
       if msg.from_user.username != self.username:
-         userinfo["username"] = msg.from_user.username
+         userdata["username"] = msg.from_user.username
 
       firstname = msg.from_user.first_name
       lastname = " " + msg.from_user.last_name if msg.from_user.last_name else ""
 
       name = firstname + lastname
       if self.name != name:
-         userinfo["name"] = name
-      await db.update_user(self.ID, userinfo, userdata)
+         userdata["name"] = name
+      await db.update_user(self.ID, userdata)
       if self.subscription and self.subscription["name"] != "free":
          if now > self.subscription['expiry_date']:
             await self.end_subscription()

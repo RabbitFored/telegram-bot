@@ -2,7 +2,7 @@ import glob
 import importlib
 from os.path import basename, dirname, isfile
 
-from .mongo import MongoDB
+from .mongo_mono import MongoDB
 #from .redis import Redis
 from ..shared import CONFIG
 
